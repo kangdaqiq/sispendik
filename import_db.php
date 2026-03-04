@@ -12,6 +12,7 @@ $handle = fopen($path, 'r');
 
 if ($handle) {
     echo "Importing...\n";
+    DB::connection('sqlite_wilayah')->beginTransaction();
     $query = '';
     $count = 0;
     while (($line = fgets($handle)) !== false) {
@@ -36,6 +37,7 @@ if ($handle) {
         }
     }
     fclose($handle);
+    DB::connection('sqlite_wilayah')->commit();
     echo "Done importing $count queries.\n";
 }
 else {

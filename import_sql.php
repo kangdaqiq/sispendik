@@ -18,7 +18,9 @@ if (!file_exists($sqlitePath)) {
 
 echo "Starting import...\n";
 
+DB::connection('sqlite_wilayah')->beginTransaction();
 $sql = '';
+$count = 0;
 $handle = fopen($file, 'r');
 if ($handle) {
     while (($line = fgets($handle)) !== false) {
@@ -37,6 +39,10 @@ if ($handle) {
 
             try {
                 DB::connection('sqlite_wilayah')->unprepared($sqlToExec);
+                $count++;
+                if ($count % 5000 == 0) {
+                    echo "Imported $count queries...\n";
+                }
             }
             catch (\Exception $e) {
                 echo "Error executing query: " . substr($sql, 0, 100) . "...\n";
@@ -47,5 +53,6 @@ if ($handle) {
     }
     fclose($handle);
 }
+DB::connection('sqlite_wilayah')->commit();
 
-echo "Import finished!\n";
+echo "Import finished! Total queries imported: $count\n";
