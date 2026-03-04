@@ -367,7 +367,7 @@
                                     name="no_telp_ayah" :value="old('no_telp_ayah')" />
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                        <div class="ayah_detail grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                             <div>
                                 <x-input-label for="pendidikan_ayah" value="Pendidikan Terakhir" />
                                 <select id="pendidikan_ayah" name="pendidikan_ayah"
@@ -468,7 +468,7 @@
                                     :value="old('no_telp_ibu')" />
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                        <div class="ibu_detail grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                             <div>
                                 <x-input-label for="pendidikan_ibu" value="Pendidikan Terakhir" />
                                 <select id="pendidikan_ibu" name="pendidikan_ibu"
@@ -1467,4 +1467,4 @@
             setupRegionGroup('ortu');
         });
     </script>
-    </x-registration-layout>
+</x-registration-layout>
