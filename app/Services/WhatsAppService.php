@@ -56,10 +56,11 @@ class WhatsAppService
             $fileName = basename($filePath);
 
             $response = Http::withBasicAuth($this->username, $this->password)
+                ->asMultipart()
                 ->attach('file', $fileContent, $fileName)
                 ->post($this->baseUrl . '/send/file', [
-                    'phone' => $phone,
-                    'caption' => $caption,
+                    ['name' => 'phone', 'contents' => $phone],
+                    ['name' => 'caption', 'contents' => $caption],
                 ]);
 
             if (!$response->successful()) {
