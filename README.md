@@ -11,7 +11,7 @@ Aplikasi web manajemen pendidikan berbasis Laravel yang mencakup pendaftaran pes
 - **Frontend**: AdminLTE + Bootstrap 4 + Alpine.js
 - **Database**: MySQL (utama) + SQLite (data wilayah)
 - **Queue**: Laravel Queue (database driver)
-- **PDF**: barryvdh/laravel-dompdf
+- **PDF**: mpdf/mpdf v8.2.7 (F4, margin diset via constructor)
 - **WhatsApp**: Go WhatsApp API (Basic Auth)
 
 ---
@@ -144,6 +144,10 @@ Setelah menjalankan seeder:
 | Job | Fungsi |
 |-----|--------|
 | `SendWhatsAppPendaftaranNotification` | Generate PDF Formulir Pendaftaran + Kirim WA (teks & PDF) |
+
+> **Catatan PDF View:**
+> - `resources/views/admin/pendaftaran/print_pdf.blade.php` — digunakan oleh mPDF (queue job), font Data Orang Tua 17px
+> - `resources/views/admin/pendaftaran/print.blade.php` — digunakan untuk tampilan admin via browser, ukuran normal
 
 ---
 
