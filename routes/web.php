@@ -45,6 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Pendaftaran
     Route::get('/admin/pendaftaran', [App\Http\Controllers\AdminPendaftaranController::class, 'index'])->name('admin.pendaftaran.index');
     Route::get('/admin/pendaftaran/{pendaftaran}', [App\Http\Controllers\AdminPendaftaranController::class, 'show'])->name('admin.pendaftaran.show');
+    Route::get('/admin/pendaftaran/{pendaftaran}/print', [App\Http\Controllers\AdminPendaftaranController::class, 'print'])->name('admin.pendaftaran.print');
     Route::post('/admin/pendaftaran/{pendaftaran}/terima', [App\Http\Controllers\AdminPendaftaranController::class, 'terima'])->name('admin.pendaftaran.terima');
     Route::post('/admin/pendaftaran/{pendaftaran}/tolak', [App\Http\Controllers\AdminPendaftaranController::class, 'tolak'])->name('admin.pendaftaran.tolak');
 

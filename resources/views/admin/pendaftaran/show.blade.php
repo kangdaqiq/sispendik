@@ -239,19 +239,14 @@
                     <h3 class="card-title"><i class="fas fa-home mr-1"></i> Alamat Orang Tua / Wali</h3>
                 </div>
                 <div class="card-body">
-                    @if($pendaftaran->alamat_ortu_sama)
-                        <span class="text-muted font-italic"><i class="fas fa-check text-success mr-1"></i> Sama dengan alamat
-                            siswa.</span>
-                    @else
-                        <address class="mb-0">
-                            {{ $pendaftaran->alamat_detail_ortu }}<br>
-                            RT {{ $pendaftaran->rt_ortu ?? '-' }} / RW {{ $pendaftaran->rw_ortu ?? '-' }}<br>
-                            Desa/Kel: <strong>{{ $pendaftaran->desa_ortu }}</strong><br>
-                            Kec: {{ $pendaftaran->kecamatan_ortu }}, Kab/Kota: {{ $pendaftaran->kabupaten_ortu }}<br>
-                            Provinsi: {{ $pendaftaran->provinsi_ortu }}<br>
-                            Kode Pos: {{ $pendaftaran->kode_pos_ortu ?? '-' }}
-                        </address>
-                    @endif
+                    <address class="mb-0">
+                        {{ $pendaftaran->alamat_detail_ortu }}<br>
+                        RT {{ $pendaftaran->rt_ortu ?? '-' }} / RW {{ $pendaftaran->rw_ortu ?? '-' }}<br>
+                        Desa/Kel: <strong>{{ $pendaftaran->desa_ortu }}</strong><br>
+                        Kec: {{ $pendaftaran->kecamatan_ortu }}, Kab/Kota: {{ $pendaftaran->kabupaten_ortu }}<br>
+                        Provinsi: {{ $pendaftaran->provinsi_ortu }}<br>
+                        Kode Pos: {{ $pendaftaran->kode_pos_ortu ?? '-' }}
+                    </address>
                 </div>
             </div>
         </div>
@@ -275,7 +270,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-4 text-center">
+                <div class="col-md-3 text-center">
                     <p class="font-weight-bold">Foto KK</p>
                     <a href="{{ Storage::url($pendaftaran->foto_kk) }}" target="_blank">
                         <img src="{{ Storage::url($pendaftaran->foto_kk) }}" alt="KK" class="img-thumbnail"
@@ -283,7 +278,7 @@
                         <div class="text-primary small mt-1"><i class="fas fa-search mr-1"></i>Klik untuk perbesar</div>
                     </a>
                 </div>
-                <div class="col-md-4 text-center">
+                <div class="col-md-3 text-center">
                     <p class="font-weight-bold">Foto KTP Orang Tua</p>
                     @if($pendaftaran->foto_ktp_ortu)
                         <a href="{{ Storage::url($pendaftaran->foto_ktp_ortu) }}" target="_blank">
@@ -295,7 +290,19 @@
                         <div class="text-muted font-italic p-4 bg-light border">Tidak ada (Ortu sudah meninggal)</div>
                     @endif
                 </div>
-                <div class="col-md-4 text-center">
+                <div class="col-md-3 text-center">
+                    <p class="font-weight-bold">Akte Kelahiran</p>
+                    @if($pendaftaran->foto_akte_kelahiran)
+                        <a href="{{ Storage::url($pendaftaran->foto_akte_kelahiran) }}" target="_blank">
+                            <img src="{{ Storage::url($pendaftaran->foto_akte_kelahiran) }}" alt="Akte" class="img-thumbnail"
+                                style="max-height:200px; object-fit:cover;">
+                            <div class="text-primary small mt-1"><i class="fas fa-search mr-1"></i>Klik untuk perbesar</div>
+                        </a>
+                    @else
+                        <div class="text-muted font-italic p-4 bg-light border">Tidak diunggah</div>
+                    @endif
+                </div>
+                <div class="col-md-3 text-center">
                     <p class="font-weight-bold">Ijazah / SKL</p>
                     <a href="{{ Storage::url($pendaftaran->ijazah_terakhir) }}" target="_blank">
                         <img src="{{ Storage::url($pendaftaran->ijazah_terakhir) }}" alt="Ijazah" class="img-thumbnail"
@@ -307,8 +314,13 @@
         </div>
     </div>
 
-    <a href="{{ route('admin.pendaftaran.index') }}" class="btn btn-secondary mb-3">
-        <i class="fas fa-arrow-left mr-1"></i> Kembali ke Daftar
-    </a>
+    <div class="d-flex gap-2 mb-3">
+        <a href="{{ route('admin.pendaftaran.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left mr-1"></i> Kembali ke Daftar
+        </a>
+        <a href="{{ route('admin.pendaftaran.print', $pendaftaran->id) }}" target="_blank" class="btn btn-dark">
+            <i class="fas fa-print mr-1"></i> Cetak / Simpan PDF
+        </a>
+    </div>
 
 @endsection

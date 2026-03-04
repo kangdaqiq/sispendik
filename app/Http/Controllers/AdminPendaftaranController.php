@@ -23,6 +23,11 @@ class AdminPendaftaranController extends Controller
         return view('admin.pendaftaran.show', compact('pendaftaran'));
     }
 
+    public function print(Pendaftaran $pendaftaran)
+    {
+        return view('admin.pendaftaran.print', compact('pendaftaran'));
+    }
+
     public function terima(Request $request, Pendaftaran $pendaftaran)
     {
         $request->validate([

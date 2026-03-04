@@ -29,29 +29,29 @@
         <div class="mb-8">
             <div class="flex items-center justify-between relative">
                 <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-200 z-0 rounded-full"></div>
-                <div class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-indigo-500 z-0 rounded-full transition-all duration-500" :style="'width: ' + ((step - 1) / 3 * 100) + '%'"></div>
+                <div class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-blue-500 z-0 rounded-full transition-all duration-500" :style="'width: ' + ((step - 1) / 3 * 100) + '%'"></div>
                 
                 <template x-for="i in 4">
                     <div class="relative z-10 flex flex-col items-center">
                         <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors duration-300 border-4"
-                             :class="step >= i ? 'bg-indigo-600 text-white border-indigo-200' : 'bg-white text-gray-400 border-gray-200'">
+                             :class="step >= i ? 'bg-blue-600 text-white border-blue-200' : 'bg-white text-gray-400 border-gray-200'">
                             <span x-text="i"></span>
                         </div>
                     </div>
                 </template>
             </div>
             <div class="flex justify-between text-xs font-semibold text-gray-500 mt-2 px-1">
-                <span :class="step >= 1 ? 'text-indigo-600' : ''">Data Anak</span>
-                <span :class="step >= 2 ? 'text-indigo-600' : ''">Alamat</span>
-                <span :class="step >= 3 ? 'text-indigo-600' : ''">Orang Tua</span>
-                <span :class="step >= 4 ? 'text-indigo-600' : ''">Dokumen</span>
+                <span :class="step >= 1 ? 'text-blue-600' : ''">Data Anak</span>
+                <span :class="step >= 2 ? 'text-blue-600' : ''">Alamat</span>
+                <span :class="step >= 3 ? 'text-blue-600' : ''">Orang Tua</span>
+                <span :class="step >= 4 ? 'text-blue-600' : ''">Dokumen</span>
             </div>
         </div>
 
         <!-- Bagian 1: Data Diri Siswa -->
         <div x-show="step === 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-indigo-50/50 px-6 py-4 border-b border-gray-100 flex items-center gap-2">
-                <span class="bg-indigo-100 text-indigo-700 font-bold rounded-full w-8 h-8 flex items-center justify-center">1</span>
+            <div class="bg-blue-50/50 px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+                <span class="bg-blue-100 text-blue-700 font-bold rounded-full w-8 h-8 flex items-center justify-center">1</span>
                 <h3 class="text-lg font-bold text-gray-800">Data Diri Pribadi Siswa</h3>
             </div>
             <div class="p-6">
@@ -79,7 +79,7 @@
                 <div>
                     <x-input-label for="jenis_kelamin" value="Jenis Kelamin" />
                     <select id="jenis_kelamin" name="jenis_kelamin"
-                        class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
                         required>
                         <option value="">-- Pilih --</option>
                         <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-Laki</option>
@@ -89,7 +89,7 @@
                 <div>
                     <x-input-label for="agama" value="Agama" />
                     <select id="agama" name="agama"
-                        class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
                         required>
                         <option value="">-- Pilih --</option>
                         <option value="Islam" {{ old('agama') == 'Islam' ? 'selected' : '' }}>Islam</option>
@@ -135,7 +135,7 @@
                 <div>
                     <x-input-label for="status_anak" value="Status Anak" />
                     <select id="status_anak" name="status_anak"
-                        class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
                         required>
                         <option value="">-- Pilih --</option>
                         <option value="kandung" {{ old('status_anak') == 'kandung' ? 'selected' : '' }}>Kandung</option>
@@ -184,7 +184,7 @@
                             }
                         }
                     " 
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition-colors flex items-center gap-2">
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition-colors flex items-center gap-2">
                     Selanjutnya 
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -195,8 +195,8 @@
 
         <!-- Bagian 2: Alamat Siswa -->
         <div x-show="step === 2" style="display: none;" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-indigo-50/50 px-6 py-4 border-b border-gray-100 flex items-center gap-2">
-                <span class="bg-indigo-100 text-indigo-700 font-bold rounded-full w-8 h-8 flex items-center justify-center">2</span>
+            <div class="bg-blue-50/50 px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+                <span class="bg-blue-100 text-blue-700 font-bold rounded-full w-8 h-8 flex items-center justify-center">2</span>
                 <h3 class="text-lg font-bold text-gray-800">Alamat Lengkap Siswa</h3>
             </div>
             <div class="p-6">
@@ -204,7 +204,7 @@
                 <div>
                     <x-input-label for="provinsi" value="Provinsi" />
                     <select id="provinsi" name="provinsi"
-                        class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
                         required>
                         <option value="">-- Pilih Provinsi --</option>
                     </select>
@@ -214,7 +214,7 @@
                 <div>
                     <x-input-label for="kabupaten" value="Kabupaten/Kota" />
                     <select id="kabupaten" name="kabupaten"
-                        class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm disabled:bg-gray-100"
+                        class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm disabled:bg-gray-100"
                         required disabled>
                         <option value="">-- Pilih Kabupaten/Kota --</option>
                     </select>
@@ -223,7 +223,7 @@
                 <div>
                     <x-input-label for="kecamatan" value="Kecamatan" />
                     <select id="kecamatan" name="kecamatan"
-                        class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm disabled:bg-gray-100"
+                        class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm disabled:bg-gray-100"
                         required disabled>
                         <option value="">-- Pilih Kecamatan --</option>
                     </select>
@@ -232,7 +232,7 @@
                 <div>
                     <x-input-label for="desa" value="Desa/Kelurahan" />
                     <select id="desa" name="desa"
-                        class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm disabled:bg-gray-100"
+                        class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm disabled:bg-gray-100"
                         required disabled>
                         <option value="">-- Pilih Desa/Kelurahan --</option>
                     </select>
@@ -241,7 +241,7 @@
                 <div class="md:col-span-2">
                     <x-input-label for="alamat_detail" value="Detail Alamat (Jalan, Nomor, dsb)" />
                     <textarea id="alamat_detail" name="alamat_detail"
-                        class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
                         rows="3" required>{{ old('alamat_detail') }}</textarea>
                 </div>
                 <div>
@@ -287,7 +287,7 @@
                             if (firstInvalid) firstInvalid.reportValidity();
                         }
                     " 
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition-colors flex items-center gap-2">
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition-colors flex items-center gap-2">
                     Selanjutnya 
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -298,8 +298,8 @@
 
         <!-- Bagian 3: Data Orang Tua -->
         <div x-show="step === 3" style="display: none;" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-indigo-50/50 px-6 py-4 border-b border-gray-100 flex items-center gap-2">
-                <span class="bg-indigo-100 text-indigo-700 font-bold rounded-full w-8 h-8 flex items-center justify-center">3</span>
+            <div class="bg-blue-50/50 px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+                <span class="bg-blue-100 text-blue-700 font-bold rounded-full w-8 h-8 flex items-center justify-center">3</span>
                 <h3 class="text-lg font-bold text-gray-800">Data Orang Tua / Wali</h3>
             </div>
             <div class="p-6">
@@ -308,7 +308,7 @@
                 <!-- Data Ayah -->
                 <div class="bg-gray-50/80 p-5 rounded-xl border border-gray-200">
                     <h4 class="font-bold text-gray-800 flex items-center gap-2 mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                         </svg>
                         Data Ayah
@@ -317,7 +317,7 @@
                     <div>
                         <x-input-label for="status_ayah" value="Status Ayah" />
                         <select id="status_ayah" name="status_ayah"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
                             required>
                             <option value="masih_hidup" {{ old('status_ayah', 'masih_hidup') == 'masih_hidup' ? 'selected' : '' }}>Masih Hidup</option>
                             <option value="sudah_meninggal" {{ old('status_ayah') == 'sudah_meninggal' ? 'selected' : '' }}>Sudah Meninggal</option>
@@ -336,7 +336,7 @@
                     <div class="ayah_detail">
                         <x-input-label for="pendidikan_ayah" value="Pendidikan Ayah" />
                         <select id="pendidikan_ayah" name="pendidikan_ayah"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm">
                             <option value="">-- Pilih Pendidikan --</option>
                             <option value="SD/Sederajat" {{ old('pendidikan_ayah') == 'SD/Sederajat' ? 'selected' : '' }}>SD / Sederajat</option>
                             <option value="SMP/Sederajat" {{ old('pendidikan_ayah') == 'SMP/Sederajat' ? 'selected' : '' }}>SMP / Sederajat</option>
@@ -359,7 +359,7 @@
                 <!-- Data Ibu -->
                 <div class="bg-gray-50/80 p-5 rounded-xl border border-gray-200">
                     <h4 class="font-bold text-gray-800 flex items-center gap-2 mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                         </svg>
                         Data Ibu
@@ -368,7 +368,7 @@
                     <div>
                         <x-input-label for="status_ibu" value="Status Ibu" />
                         <select id="status_ibu" name="status_ibu"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
                             required>
                             <option value="masih_hidup" {{ old('status_ibu', 'masih_hidup') == 'masih_hidup' ? 'selected' : '' }}>Masih Hidup</option>
                             <option value="sudah_meninggal" {{ old('status_ibu') == 'sudah_meninggal' ? 'selected' : '' }}>Sudah Meninggal</option>
@@ -387,7 +387,7 @@
                     <div class="ibu_detail">
                         <x-input-label for="pendidikan_ibu" value="Pendidikan Ibu" />
                         <select id="pendidikan_ibu" name="pendidikan_ibu"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm">
                             <option value="">-- Pilih Pendidikan --</option>
                             <option value="SD/Sederajat" {{ old('pendidikan_ibu') == 'SD/Sederajat' ? 'selected' : '' }}>SD / Sederajat</option>
                             <option value="SMP/Sederajat" {{ old('pendidikan_ibu') == 'SMP/Sederajat' ? 'selected' : '' }}>SMP / Sederajat</option>
@@ -425,7 +425,7 @@
                     <div>
                         <x-input-label for="pendidikan_wali" value="Pendidikan Wali" />
                         <select id="pendidikan_wali" name="pendidikan_wali"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm">
                             <option value="">-- Pilih Pendidikan --</option>
                             <option value="SD/Sederajat" {{ old('pendidikan_wali') == 'SD/Sederajat' ? 'selected' : '' }}>SD / Sederajat</option>
                             <option value="SMP/Sederajat" {{ old('pendidikan_wali') == 'SMP/Sederajat' ? 'selected' : '' }}>SMP / Sederajat</option>
@@ -449,7 +449,7 @@
             <!-- Bagian 3 Lanjutan: Alamat Orang Tua/Wali -->
             <div class="mt-8 pt-8 border-t border-gray-100">
                 <h4 class="font-bold text-gray-800 flex items-center gap-2 mb-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
                     </svg>
                     Alamat Orang Tua / Wali
@@ -458,8 +458,8 @@
                 <div class="mb-6 flex items-center bg-yellow-50 p-4 rounded-lg border border-yellow-100">
                     <input type="hidden" name="alamat_ortu_sama" value="0"> <!-- Fallback if unchecked -->
                     <input id="alamat_ortu_sama" type="checkbox" name="alamat_ortu_sama" value="1"
-                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-5 h-5 mr-3" {{ old('alamat_ortu_sama', '1') == '1' ? 'checked' : '' }}>
-                    <label for="alamat_ortu_sama" class="text-sm font-medium text-gray-700">Centang jika <span class="text-indigo-600 font-bold">Alamat Orang Tua / Wali sama</span> dengan alamat Anak (Siswa)</label>
+                        class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 w-5 h-5 mr-3" {{ old('alamat_ortu_sama', '1') == '1' ? 'checked' : '' }}>
+                    <label for="alamat_ortu_sama" class="text-sm font-medium text-gray-700">Centang jika <span class="text-blue-600 font-bold">Alamat Orang Tua / Wali sama</span> dengan alamat Anak (Siswa)</label>
                 </div>
 
                 <div id="alamat_ortu_container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" style="position: relative;">
@@ -468,7 +468,7 @@
                     <div>
                         <x-input-label for="provinsi_ortu_select" value="Provinsi" />
                         <select id="provinsi_ortu_select"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm">
                             <option value="">-- Pilih Provinsi --</option>
                         </select>
                         <input type="hidden" name="provinsi_ortu" id="provinsi_ortu_text"
@@ -477,7 +477,7 @@
                     <div>
                         <x-input-label for="kabupaten_ortu_select" value="Kabupaten/Kota" />
                         <select id="kabupaten_ortu_select"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm disabled:bg-gray-100"
+                            class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm disabled:bg-gray-100"
                             disabled>
                             <option value="">-- Pilih Kabupaten/Kota --</option>
                         </select>
@@ -487,7 +487,7 @@
                     <div>
                         <x-input-label for="kecamatan_ortu_select" value="Kecamatan" />
                         <select id="kecamatan_ortu_select"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm disabled:bg-gray-100"
+                            class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm disabled:bg-gray-100"
                             disabled>
                             <option value="">-- Pilih Kecamatan --</option>
                         </select>
@@ -497,7 +497,7 @@
                     <div>
                         <x-input-label for="desa_ortu_select" value="Desa/Kelurahan" />
                         <select id="desa_ortu_select"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm disabled:bg-gray-100"
+                            class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm disabled:bg-gray-100"
                             disabled>
                             <option value="">-- Pilih Desa/Kelurahan --</option>
                         </select>
@@ -506,7 +506,7 @@
                     <div class="md:col-span-2">
                         <x-input-label for="alamat_detail_ortu" value="Detail Alamat (Jalan, Nomor, dsb)" />
                         <textarea id="alamat_detail_ortu" name="alamat_detail_ortu"
-                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm"
                             rows="3">{{ old('alamat_detail_ortu') }}</textarea>
                     </div>
                     <div>
@@ -553,7 +553,7 @@
                             if (firstInvalid) firstInvalid.reportValidity();
                         }
                     " 
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition-colors flex items-center gap-2">
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition-colors flex items-center gap-2">
                     Selanjutnya 
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -564,18 +564,18 @@
 
         <!-- Bagian 4: Upload Dokumen -->
         <div x-show="step === 4" x-cloak style="display: none;" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-indigo-50/50 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div class="bg-blue-50/50 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <span class="bg-indigo-100 text-indigo-700 font-bold rounded-full w-8 h-8 flex items-center justify-center">4</span>
+                    <span class="bg-blue-100 text-blue-700 font-bold rounded-full w-8 h-8 flex items-center justify-center">4</span>
                     <h3 class="text-lg font-bold text-gray-800">Upload Dokumen Persyaratan</h3>
                 </div>
-                <p class="text-xs font-semibold text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full">Max 2MB per file (JPG/PNG)</p>
+                <p class="text-xs font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">Max 2MB per file (JPG/PNG)</p>
             </div>
             <div class="p-6">
 
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 <!-- Kartu Keluarga -->
-                <div class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-indigo-50 hover:border-indigo-300 transition-colors">
+                <div class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                     </svg>
@@ -586,12 +586,12 @@
                         <span class="text-green-600 text-xs mt-2 block font-semibold">✔ {{ old('temp_foto_kk_name', 'File') }} sudah diunggah.</span>
                         <input type="file" id="foto_kk" name="foto_kk" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300 mt-2" accept="image/*" />
                     @else
-                        <input type="file" id="foto_kk" name="foto_kk" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 mt-3" required accept="image/*" />
+                        <input type="file" id="foto_kk" name="foto_kk" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 mt-3" required accept="image/*" />
                     @endif
                 </div>
 
                 <!-- KTP Ortu -->
-                <div id="ktp_ortu_container" class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-indigo-50 hover:border-indigo-300 transition-colors">
+                <div id="ktp_ortu_container" class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -602,12 +602,12 @@
                         <span class="text-green-600 text-xs mt-2 block font-semibold">✔ {{ old('temp_foto_ktp_ortu_name', 'File') }} sudah diunggah. </span>
                         <input type="file" id="foto_ktp_ortu" name="foto_ktp_ortu" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300 mt-2" accept="image/*" />
                     @else
-                        <input type="file" id="foto_ktp_ortu" name="foto_ktp_ortu" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 mt-3" accept="image/*" />
+                        <input type="file" id="foto_ktp_ortu" name="foto_ktp_ortu" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 mt-3" accept="image/*" />
                     @endif
                 </div>
                 
                 <!-- Akte Kelahiran -->
-                <div class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-indigo-50 hover:border-indigo-300 transition-colors">
+                <div class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
@@ -618,12 +618,12 @@
                         <span class="text-green-600 text-xs mt-2 block font-semibold">✔ {{ old('temp_foto_akte_kelahiran_name', 'File') }} sudah diunggah. </span>
                         <input type="file" id="foto_akte_kelahiran" name="foto_akte_kelahiran" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300 mt-2" accept="image/*" />
                     @else
-                        <input type="file" id="foto_akte_kelahiran" name="foto_akte_kelahiran" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 mt-3" required accept="image/*" />
+                        <input type="file" id="foto_akte_kelahiran" name="foto_akte_kelahiran" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 mt-3" required accept="image/*" />
                     @endif
                 </div>
 
                 <!-- Ijazah / SKL -->
-                <div class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-indigo-50 hover:border-indigo-300 transition-colors">
+                <div class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
@@ -634,7 +634,7 @@
                         <span class="text-green-600 text-xs mt-2 block font-semibold">✔ {{ old('temp_ijazah_terakhir_name', 'File') }} sudah diunggah. </span>
                         <input type="file" id="ijazah_terakhir" name="ijazah_terakhir" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300 mt-2" accept="image/*" />
                     @else
-                        <input type="file" id="ijazah_terakhir" name="ijazah_terakhir" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 mt-3" required accept="image/*" />
+                        <input type="file" id="ijazah_terakhir" name="ijazah_terakhir" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 mt-3" required accept="image/*" />
                     @endif
                 </div>
             </div>
@@ -649,7 +649,7 @@
                     </svg>
                     Sebelumnya
                 </button>
-                <button type="submit" class="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transform transition hover:-translate-y-0.5 text-base flex items-center gap-2">
+                <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-700 hover:to-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transform transition hover:-translate-y-0.5 text-base flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>

@@ -19,30 +19,60 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background: #f8fafc;
         }
 
-        .gradient-bg {
-            background: linear-gradient(135deg, #f6f8fd 0%, #f1f5f9 100%);
+        .header-bar {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1e3a5f 100%);
+            border-bottom: 3px solid #f59e0b;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .logo-ring {
+            background: rgba(255, 255, 255, 0.12);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-radius: 9999px;
+            padding: 3px;
+        }
+
+        .school-name {
+            color: #fbbf24;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .back-link {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #fbbf24;
         }
     </style>
 </head>
 
-<body class="font-sans text-gray-800 antialiased gradient-bg min-h-screen">
+<body class="font-sans text-gray-800 antialiased min-h-screen">
 
     <!-- Header -->
-    <div class="bg-indigo-600 text-white shadow-md">
+    <div class="header-bar">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center gap-3">
-                    <div class="bg-white p-1 rounded-full">
-                        <x-application-logo class="w-8 h-8 text-indigo-600" />
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-4">
+                    <img src="{{ asset('logo-smk.png') }}" alt="Logo SMK" class="h-14 w-14 object-contain">
+                    <div>
+                        <span class="font-bold text-lg text-white block leading-tight tracking-tight">
+                            Form Pendaftaran Siswa Baru
+                        </span>
+                        <span class="school-name">SMK Assuniyah Tumijajar</span>
                     </div>
-                    <span class="font-bold text-xl tracking-tight">Form Pendaftaran Siswa Baru</span>
                 </div>
                 <div>
-                    <a href="/" class="text-indigo-100 hover:text-white transition-colors text-sm font-medium">
-                        &larr; Kembali ke Beranda
-                    </a>
+                    <a href="/" class="back-link">&larr; Kembali ke Beranda</a>
                 </div>
             </div>
         </div>
@@ -54,7 +84,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="mt-12 py-6 text-center text-gray-500 text-sm">
+    <footer class="mt-12 py-6 text-center text-gray-400 text-sm">
         &copy; {{ date('Y') }} {{ config('app.name', 'Sistem Informasi Sekolah') }}. Hak Cipta Dilindungi.
     </footer>
 
