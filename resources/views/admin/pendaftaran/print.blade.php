@@ -1,5 +1,5 @@
 @php 
-                Carbon\Carbon::setLocale('id');
+                    Carbon\Carbon::setLocale('id');
     $isPdf = $isPdf ?? false;
     $logoBase64 = '';
     if ($isPdf) {
@@ -604,15 +604,20 @@
 
         <!-- DOKUMEN -->
         <div class="section-title">E. Dokumen Persyaratan</div>
-        <table class="doc-checklist">
+        <table style="width:100%; border-collapse:collapse; margin-top:6px;">
             <tr>
-                <td class="doc-checked">Kartu Keluarga (KK)</td>
-                <td class="{{ $pendaftaran->foto_ktp_ortu ? 'doc-checked' : 'doc-unchecked' }}">KTP Orang Tua</td>
+                <td style="padding:4px 0; font-size:11px; color:#16a34a; font-weight:bold;">[v] Kartu Keluarga (KK)</td>
+                <td
+                    style="padding:4px 0; font-size:11px; {{ $pendaftaran->foto_ktp_ortu ? 'color:#16a34a; font-weight:bold;' : 'color:#dc2626;' }}">
+                    {{ $pendaftaran->foto_ktp_ortu ? '[v]' : '[x]' }} KTP Orang Tua
+                </td>
             </tr>
             <tr>
-                <td class="{{ $pendaftaran->foto_akte_kelahiran ? 'doc-checked' : 'doc-unchecked' }}">Akte Kelahiran
+                <td
+                    style="padding:4px 0; font-size:11px; {{ $pendaftaran->foto_akte_kelahiran ? 'color:#16a34a; font-weight:bold;' : 'color:#dc2626;' }}">
+                    {{ $pendaftaran->foto_akte_kelahiran ? '[v]' : '[x]' }} Akte Kelahiran
                 </td>
-                <td class="doc-checked">Ijazah / SKL</td>
+                <td style="padding:4px 0; font-size:11px; color:#16a34a; font-weight:bold;">[v] Ijazah / SKL</td>
             </tr>
         </table>
 
