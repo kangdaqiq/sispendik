@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Mpdf\Mpdf;
 use Carbon\Carbon;
 
 class SendWhatsAppPendaftaranNotification implements ShouldQueue
@@ -51,11 +51,35 @@ class SendWhatsAppPendaftaranNotification implements ShouldQueue
         Log::info("WA Job [0/2]: Generate PDF untuk {$nama}");
         $pendaftaran = $this->pendaftaran;
         $isPdf = true;
-        $pdf = Pdf::loadView('admin.pendaftaran.print', compact('pendaftaran', 'isPdf'))
-            ->setPaper('a4', 'portrait');
+
+        // Render blade ke HTML
+        $html = view('admin.pendaftaran.print_pdf', compact('pendaftaran', 'isPdf'))->render();
+
+        // Naikkan pcre limit karena HTML mengandung base64 images
+        ini_set('pcre.backtrack_limit', 10000000);
+
+        // mPDF: F4 = 210mm x 330mm, margin: top=15, right=18, bottom=15, left=18
+        $mpdf = new Mpdf([
+            'format' => [210, 330],
+            'margin_top' => 15,
+            'margin_right' => 18,
+            'margin_bottom' => 15,
+            'margin_left' => 18,
+            'default_font' => 'dejavusans',
+        ]);
+
+        // Split CSS dan body untuk handle HTML berukuran besar
+        preg_match('/<style[^>]*>(.*?)<\/style>/si', $html, $cssMatch);
+        $css = $cssMatch[1] ?? '';
+        preg_match('/<body[^>]*>(.*?)<\/body>/si', $html, $bodyMatch);
+        $body = $bodyMatch[1] ?? $html;
+        $mpdf->WriteHTML($css, \Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->WriteHTML($body, \Mpdf\HTMLParserMode::HTML_BODY);
+
+        $pdfContent = $mpdf->Output('', 'S'); // string output
 
         $pdfFilename = 'pdf_pendaftaran/Formulir_Pendaftaran_' . ($pendaftaran->nisn ?: $pendaftaran->id) . '_' . time() . '.pdf';
-        Storage::disk('public')->put($pdfFilename, $pdf->output());
+        Storage::disk('public')->put($pdfFilename, $pdfContent);
         $fullPdfPath = storage_path('app/public/' . $pdfFilename);
         Log::info("WA Job [0/2 OK]: PDF berhasil digenerate di {$fullPdfPath}");
 

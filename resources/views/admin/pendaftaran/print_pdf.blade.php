@@ -438,150 +438,150 @@
         <table style="width:100%; border-collapse:collapse;">
             <tr>
                 <td style="width:50%; vertical-align:top; padding-right:6px;">
-                    <table style="width:100%; border-collapse:collapse; font-size:11px;">
+                    <table style="width:100%; border-collapse:collapse; font-size:17px;">
                         <tr>
                             <td colspan="3"
-                                style="font-weight:bold; background:#f3f4f6; padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="font-weight:bold; background:#f3f4f6; padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Data Ayah</td>
                         </tr>
                         <tr style="background:#fff;">
                             <td
-                                style="width:44%; padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="width:44%; padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Status</td>
                             <td
-                                style="width:4%; padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="width:4%; padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ ucwords(str_replace('_', ' ', $pendaftaran->status_ayah)) }}
                             </td>
                         </tr>
                         <tr style="background:#f9fafb;">
                             <td
-                                style="width:44%; padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="width:44%; padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Nama</td>
                             <td
-                                style="width:4%; padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="width:4%; padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ $pendaftaran->nama_ayah }}
                             </td>
                         </tr>
                         <tr style="background:#fff;">
                             <td
-                                style="padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 No. Telepon</td>
                             <td
-                                style="padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ $pendaftaran->status_ayah == 'masih_hidup' ? ($pendaftaran->no_telp_ayah ?? '-') : '-' }}
                             </td>
                         </tr>
                         <tr style="background:#f9fafb;">
                             <td
-                                style="padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Pendidikan</td>
                             <td
-                                style="padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ $pendaftaran->status_ayah == 'masih_hidup' ? ($pendaftaran->pendidikan_ayah ?? '-') : '-' }}
                             </td>
                         </tr>
                         <tr style="background:#fff;">
                             <td
-                                style="padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Pekerjaan</td>
                             <td
-                                style="padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ $pendaftaran->status_ayah == 'masih_hidup' ? ($pendaftaran->pekerjaan_ayah ?? '-') : '-' }}
                             </td>
                         </tr>
                         <tr style="background:#f9fafb;">
                             <td
-                                style="padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Penghasilan / Bln</td>
                             <td
-                                style="padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ $pendaftaran->status_ayah == 'masih_hidup' ? ($pendaftaran->penghasilan_ayah ?? '-') : '-' }}
                             </td>
                         </tr>
                     </table>
                 </td>
                 <td style="width:50%; vertical-align:top; padding-left:6px;">
-                    <table style="width:100%; border-collapse:collapse; font-size:11px;">
+                    <table style="width:100%; border-collapse:collapse; font-size:17px;">
                         <tr>
                             <td colspan="3"
-                                style="font-weight:bold; background:#f3f4f6; padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="font-weight:bold; background:#f3f4f6; padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Data Ibu</td>
                         </tr>
                         <tr style="background:#fff;">
                             <td
-                                style="width:44%; padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="width:44%; padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Status</td>
                             <td
-                                style="width:4%; padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="width:4%; padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ ucwords(str_replace('_', ' ', $pendaftaran->status_ibu)) }}
                             </td>
                         </tr>
                         <tr style="background:#f9fafb;">
                             <td
-                                style="width:44%; padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="width:44%; padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Nama</td>
                             <td
-                                style="width:4%; padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="width:4%; padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ $pendaftaran->nama_ibu }}
                             </td>
                         </tr>
                         <tr style="background:#fff;">
                             <td
-                                style="padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 No. Telepon</td>
                             <td
-                                style="padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ $pendaftaran->status_ibu == 'masih_hidup' ? ($pendaftaran->no_telp_ibu ?? '-') : '-' }}
                             </td>
                         </tr>
                         <tr style="background:#f9fafb;">
                             <td
-                                style="padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Pendidikan</td>
                             <td
-                                style="padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ $pendaftaran->status_ibu == 'masih_hidup' ? ($pendaftaran->pendidikan_ibu ?? '-') : '-' }}
                             </td>
                         </tr>
                         <tr style="background:#fff;">
                             <td
-                                style="padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Pekerjaan</td>
                             <td
-                                style="padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ $pendaftaran->status_ibu == 'masih_hidup' ? ($pendaftaran->pekerjaan_ibu ?? '-') : '-' }}
                             </td>
                         </tr>
                         <tr style="background:#f9fafb;">
                             <td
-                                style="padding:4px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; font-weight:600; color:#374151; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 Penghasilan / Bln</td>
                             <td
-                                style="padding:4px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                                style="padding:5px 8px; color:#9ca3af; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 :</td>
-                            <td style="padding:4px 8px; border-bottom:1px solid #e5e7eb; font-size:11px;">
+                            <td style="padding:5px 8px; border-bottom:1px solid #e5e7eb; font-size:17px;">
                                 {{ $pendaftaran->status_ibu == 'masih_hidup' ? ($pendaftaran->penghasilan_ibu ?? '-') : '-' }}
                             </td>
                         </tr>
