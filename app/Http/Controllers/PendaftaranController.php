@@ -193,7 +193,18 @@ class PendaftaranController extends Controller
         }
         $validated['referral_code'] = $referralCode;
 
-        \App\Models\Pendaftaran::create($validated);
+        $pendaftaranBaru = \App\Models\Pendaftaran::create($validated);
+
+        // Generate PDF
+        $pendaftaran = $pendaftaranBaru; // Untuk passing ke view
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftaran'));
+
+        // Simpan PDF sementara
+        $pdfFilename = 'pdf_pendaftaran/Bukti_Pendaftaran_' . $pendaftaranBaru->nisn . '_' . time() . '.pdf';
+        \Illuminate\Support\Facades\Storage::disk('public')->put($pdfFilename, $pdf->output());
+
+        // Dispatch Job (Background) untuk kirim WA
+        \App\Jobs\SendWhatsAppPendaftaranNotification::dispatch($pendaftaranBaru, $pdfFilename);
 
         return redirect()->route('pendaftaran.sukses');
     }

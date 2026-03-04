@@ -92,7 +92,7 @@
                     <img src="{{ asset('logo-smk.png') }}" alt="Logo SMK"
                         class="relative w-24 h-24 mx-auto object-contain drop-shadow-md" />
                 </a>
-                <h2 class="mt-6 text-2xl font-bold text-gray-800 tracking-tight">Sistem Informasi Akademik</h2>
+                <h2 class="mt-6 text-2xl font-bold text-gray-800 tracking-tight">Sistem Informasi Pendidikan</h2>
                 <p class="mt-2 text-sm text-gray-500 font-medium">SMK Assuniyah Tumijajar</p>
             </div>
 

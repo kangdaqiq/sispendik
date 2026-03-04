@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'whatsapp' => [
+        'url' => env('WA_API_URL', 'https://wa-api.smkassuniyah.sch.id'),
+        'username' => env('WA_API_USERNAME'),
+        'password' => env('WA_API_PASSWORD'),
+    ],
+
 ];
