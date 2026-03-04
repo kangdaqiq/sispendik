@@ -18,7 +18,7 @@ if ($handle) {
         $query .= $line . "\n";
 
         if (substr(trim($line), -1, 1) == ';') {
-            DB::unprepared($query);
+            DB::connection('sqlite_wilayah')->unprepared($query);
             $query = '';
             $count++;
 
@@ -29,6 +29,7 @@ if ($handle) {
     }
     fclose($handle);
     echo "Done importing $count queries.\n";
-} else {
+}
+else {
     echo "Error opening file.\n";
 }

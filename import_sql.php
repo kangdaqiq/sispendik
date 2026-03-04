@@ -27,7 +27,7 @@ if ($handle) {
 
         if (substr($trimmed, -1, 1) == ';') {
             try {
-                DB::unprepared($sql);
+                DB::connection('sqlite_wilayah')->unprepared($sql);
             }
             catch (\Exception $e) {
                 echo "Error executing query: " . substr($sql, 0, 100) . "...\n";
