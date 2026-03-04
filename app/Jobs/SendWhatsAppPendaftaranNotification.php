@@ -48,16 +48,23 @@ class SendWhatsAppPendaftaranNotification implements ShouldQueue
         $tgl = $this->pendaftaran->created_at->isoFormat('D MMMM YYYY');
 
         // 1. Generate PDF di dalam Job (background)
-        Log::info("Job: Generate PDF Formulir Pendaftaran untuk {$nama}");
-        $pendaftaran = $this->pendaftaran;
-        $pdf = Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftaran'))
-            ->setPaper('a4', 'portrait');
+        Log::info("Job [STEP 1]: Mulai generate PDF untuk {$nama}");
+        try {
+            $pendaftaran = $this->pendaftaran;
+            $pdf = Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftaran'))
+                ->setPaper('a4', 'portrait');
 
-        $pdfFilename = 'pdf_pendaftaran/Formulir_Pendaftaran_' . $this->pendaftaran->nisn . '_' . time() . '.pdf';
-        Storage::disk('public')->put($pdfFilename, $pdf->output());
-        $fullPdfPath = storage_path('app/public/' . $pdfFilename);
+            $pdfFilename = 'pdf_pendaftaran/Formulir_Pendaftaran_' . $this->pendaftaran->nisn . '_' . time() . '.pdf';
+            Storage::disk('public')->put($pdfFilename, $pdf->output());
+            $fullPdfPath = storage_path('app/public/' . $pdfFilename);
+            Log::info("Job [STEP 1 OK]: PDF tersimpan di {$fullPdfPath}");
+        } catch (\Exception $e) {
+            Log::error("Job [STEP 1 FAIL]: Gagal generate PDF - " . $e->getMessage());
+            throw $e;
+        }
 
         // 2. Kirim pesan teks
+        Log::info("Job [STEP 2]: Kirim teks WA ke {$phone}");
         $message = "*PENDAFTARAN BERHASIL*\n\n"
             . "Halo {$nama},\n\n"
             . "Terima kasih telah mendaftar di SMK Assuniyah Tumijajar pada tanggal {$tgl}.\n"
@@ -65,17 +72,18 @@ class SendWhatsAppPendaftaranNotification implements ShouldQueue
             . "Mohon simpan formulir ini dengan baik.\n\n"
             . "_Panitia PPDB SMK Assuniyah Tumijajar_";
 
-        Log::info("Job: Mengirim pesan WA ke {$phone}");
         $waService->sendMessage($phone, $message);
+        Log::info("Job [STEP 2 OK]: Teks WA berhasil dikirim");
 
         // 3. Kirim dokumen PDF
-        Log::info("Job: Mengirim PDF Formulir Pendaftaran ke {$phone}");
+        Log::info("Job [STEP 3]: Kirim PDF ke {$phone}, path: {$fullPdfPath}");
         $captionPdf = "Formulir Pendaftaran - {$nama}";
 
         if (file_exists($fullPdfPath)) {
             $waService->sendFile($phone, $fullPdfPath, $captionPdf);
+            Log::info("Job [STEP 3 OK]: PDF berhasil dikirim ke {$phone}");
         } else {
-            Log::error("Job: File PDF tidak ditemukan di {$fullPdfPath}");
+            Log::error("Job [STEP 3 FAIL]: File PDF tidak ditemukan di {$fullPdfPath}");
             throw new \Exception("File PDF tidak ditemukan: {$fullPdfPath}");
         }
     }

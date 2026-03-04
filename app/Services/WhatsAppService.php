@@ -52,16 +52,22 @@ class WhatsAppService
         $phone = $this->formatPhone($phone);
 
         try {
+            if (!file_exists($filePath)) {
+                throw new \Exception("File tidak ditemukan: {$filePath}");
+            }
+
             $fileContent = file_get_contents($filePath);
             $fileName = basename($filePath);
 
             $response = Http::withBasicAuth($this->username, $this->password)
-                ->asMultipart()
+                ->timeout(60)
                 ->attach('file', $fileContent, $fileName)
                 ->post($this->baseUrl . '/send/file', [
-                    ['name' => 'phone', 'contents' => $phone],
-                    ['name' => 'caption', 'contents' => $caption],
+                    'phone' => $phone,
+                    'caption' => $caption,
                 ]);
+
+            Log::info('WhatsApp file response: ' . $response->status() . ' - ' . $response->body());
 
             if (!$response->successful()) {
                 Log::error('WhatsApp file send failed: ' . $response->body());

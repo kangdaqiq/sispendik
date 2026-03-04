@@ -1005,8 +1005,13 @@
                 } else {
                     waliContainer.style.display = 'none';
                     ktpOrtuContainer.style.display = 'block';
-                    // Only require if at least one is alive
-                    ktpOrtuInput.setAttribute('required', 'required');
+                    // Hanya set required jika belum ada temp file yang diupload sebelumnya
+                    const hasTempKtp = document.querySelector('input[name="temp_foto_ktp_ortu"]');
+                    if (!hasTempKtp) {
+                        ktpOrtuInput.setAttribute('required', 'required');
+                    } else {
+                        ktpOrtuInput.removeAttribute('required');
+                    }
                 }
             }
 
