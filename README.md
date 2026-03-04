@@ -96,8 +96,14 @@ Pastikan web server (Nginx/Apache) mengarah ke direktori `/public`.
 Jalankan queue worker secara terus-menerus (gunakan `supervisor` di production):
 
 ```bash
-php artisan queue:work --tries=3
+# Tambahkan 1 baris ini ke crontab server
+crontab -e
+
+# Isi:
+* * * * * php /var/www/html/sispendik/artisan schedule:run >> /dev/null 2>&1
 ```
+
+Laravel Scheduler secara otomatis akan memproses antrian job (kirim WA, generate PDF) setiap menit.
 
 ---
 
@@ -168,6 +174,7 @@ php artisan storage:link
 chmod -R 775 storage bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
 
-# Jalankan queue worker (atau restart supervisor)
-php artisan queue:work --tries=3
+# Setup cron job (cukup sekali, tidak perlu diulang setiap deploy)
+# Jalankan: crontab -e, lalu tambahkan:
+# * * * * * php /var/www/html/sispendik/artisan schedule:run >> /dev/null 2>&1
 ```
