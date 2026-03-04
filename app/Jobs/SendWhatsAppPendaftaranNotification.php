@@ -4,14 +4,12 @@ namespace App\Jobs;
 
 use App\Models\Pendaftaran;
 use App\Services\WhatsAppService;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class SendWhatsAppPendaftaranNotification implements ShouldQueue
@@ -19,22 +17,24 @@ class SendWhatsAppPendaftaranNotification implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $pendaftaran;
+    public $pdfFilename;
 
-    // Tentukan jumlah maksimal retry jika Job gagal
+    // Jumlah maksimal retry jika Job gagal
     public $tries = 3;
 
-    // Tentukan waktu tunggu (detik) sebelum mencoba ulang
+    // Waktu tunggu (detik) sebelum mencoba ulang
     public $backoff = 60;
 
-    // Beri cukup waktu untuk generate PDF + kirim WA
-    public $timeout = 120;
+    // Timeout untuk request HTTP WA
+    public $timeout = 60;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(Pendaftaran $pendaftaran)
+    public function __construct(Pendaftaran $pendaftaran, string $pdfFilename)
     {
         $this->pendaftaran = $pendaftaran;
+        $this->pdfFilename = $pdfFilename;
     }
 
     /**
@@ -47,24 +47,10 @@ class SendWhatsAppPendaftaranNotification implements ShouldQueue
         Carbon::setLocale('id');
         $tgl = $this->pendaftaran->created_at->isoFormat('D MMMM YYYY');
 
-        // 1. Generate PDF di dalam Job (background)
-        Log::info("Job [STEP 1]: Mulai generate PDF untuk {$nama}");
-        try {
-            $pendaftaran = $this->pendaftaran;
-            $pdf = Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftaran'))
-                ->setPaper('a4', 'portrait');
+        $fullPdfPath = storage_path('app/public/' . $this->pdfFilename);
 
-            $pdfFilename = 'pdf_pendaftaran/Formulir_Pendaftaran_' . $this->pendaftaran->nisn . '_' . time() . '.pdf';
-            Storage::disk('public')->put($pdfFilename, $pdf->output());
-            $fullPdfPath = storage_path('app/public/' . $pdfFilename);
-            Log::info("Job [STEP 1 OK]: PDF tersimpan di {$fullPdfPath}");
-        } catch (\Exception $e) {
-            Log::error("Job [STEP 1 FAIL]: Gagal generate PDF - " . $e->getMessage());
-            throw $e;
-        }
-
-        // 2. Kirim pesan teks
-        Log::info("Job [STEP 2]: Kirim teks WA ke {$phone}");
+        // 1. Kirim pesan teks
+        Log::info("WA Job [1/2]: Kirim teks ke {$phone}");
         $message = "*PENDAFTARAN BERHASIL*\n\n"
             . "Halo {$nama},\n\n"
             . "Terima kasih telah mendaftar di SMK Assuniyah Tumijajar pada tanggal {$tgl}.\n"
@@ -73,19 +59,18 @@ class SendWhatsAppPendaftaranNotification implements ShouldQueue
             . "_Panitia PPDB SMK Assuniyah Tumijajar_";
 
         $waService->sendMessage($phone, $message);
-        Log::info("Job [STEP 2 OK]: Teks WA berhasil dikirim");
+        Log::info("WA Job [1/2 OK]: Teks terkirim ke {$phone}");
 
-        // 3. Kirim dokumen PDF
-        Log::info("Job [STEP 3]: Kirim PDF ke {$phone}, path: {$fullPdfPath}");
+        // 2. Kirim PDF
+        Log::info("WA Job [2/2]: Kirim PDF ke {$phone}, path: {$fullPdfPath}");
         $captionPdf = "Formulir Pendaftaran - {$nama}";
 
         if (file_exists($fullPdfPath)) {
             $waService->sendFile($phone, $fullPdfPath, $captionPdf);
-            Log::info("Job [STEP 3 OK]: PDF berhasil dikirim ke {$phone}");
+            Log::info("WA Job [2/2 OK]: PDF terkirim ke {$phone}");
         } else {
-            Log::error("Job [STEP 3 FAIL]: File PDF tidak ditemukan di {$fullPdfPath}");
+            Log::error("WA Job [2/2 FAIL]: File PDF tidak ditemukan di {$fullPdfPath}");
             throw new \Exception("File PDF tidak ditemukan: {$fullPdfPath}");
         }
     }
 }
-

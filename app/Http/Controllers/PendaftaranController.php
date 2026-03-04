@@ -195,9 +195,17 @@ class PendaftaranController extends Controller
 
         $pendaftaranBaru = \App\Models\Pendaftaran::create($validated);
 
-        // Dispatch Job ke background queue — user langsung redirect ke sukses
-        // Job akan mengurus generate PDF & kirim WA secara asinkron
-        \App\Jobs\SendWhatsAppPendaftaranNotification::dispatch($pendaftaranBaru);
+        // Generate PDF synchronous (cepat karena hanya data teks)
+        ini_set('memory_limit', '256M');
+        $pendaftaran = $pendaftaranBaru;
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftaran'))
+            ->setPaper('a4', 'portrait');
+
+        $pdfFilename = 'pdf_pendaftaran/Formulir_Pendaftaran_' . $pendaftaranBaru->nisn . '_' . time() . '.pdf';
+        \Illuminate\Support\Facades\Storage::disk('public')->put($pdfFilename, $pdf->output());
+
+        // Dispatch Job ke background queue — hanya untuk kirim WA
+        \App\Jobs\SendWhatsAppPendaftaranNotification::dispatch($pendaftaranBaru, $pdfFilename);
 
         return redirect()->route('pendaftaran.sukses');
     }
