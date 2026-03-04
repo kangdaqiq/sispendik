@@ -179,15 +179,8 @@
         <!-- Header -->
         <table class="header-table">
             <tr>
-                @php
-                    // Helper agar DOMPDF bisa mengambil gambar logo dari source server secara absolut
-                    $logoPath = public_path('logo-smk.png');
-                    $logoSrc = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : '';
-                @endphp
                 <td style="width: 80px;">
-                    @if($logoSrc)
-                        <img src="{{ $logoSrc }}" alt="Logo SMK" class="header-logo">
-                    @endif
+                    <img src="{{ public_path('logo-smk.png') }}" alt="Logo SMK" class="header-logo">
                 </td>
                 <td class="header-text">
                     <div class="header-title">
@@ -241,7 +234,8 @@
                 <td>Tempat, Tgl Lahir</td>
                 <td>:</td>
                 <td>{{ $pendaftaran->tempat_lahir }},
-                    {{ \Carbon\Carbon::parse($pendaftaran->tanggal_lahir)->isoFormat('D MMMM YYYY') }}</td>
+                    {{ \Carbon\Carbon::parse($pendaftaran->tanggal_lahir)->isoFormat('D MMMM YYYY') }}
+                </td>
             </tr>
             <tr>
                 <td>Agama</td>
@@ -358,7 +352,8 @@
                 <td>
                     <div class="ttd-label">Tumijajar,
                         {{ \Carbon\Carbon::parse($pendaftaran->created_at)->isoFormat('D MMMM YYYY') }}<br>Panitia
-                        Penerimaan,</div>
+                        Penerimaan,
+                    </div>
                     <div class="ttd-placeholder">( ______________________________ )</div>
                 </td>
             </tr>
@@ -367,47 +362,36 @@
     </div>
 
     <!-- LAMPIRAN DOKUMEN -->
-    @php
-        // Helper function for converting storage files to base64 for reliable DOMPDF output
-        $toBase64 = function ($path) {
-            $absPath = storage_path('app/public/' . $path);
-            if ($path && file_exists($absPath)) {
-                $ext = pathinfo($absPath, PATHINFO_EXTENSION);
-                return 'data:image/' . $ext . ';base64,' . base64_encode(file_get_contents($absPath));
-            }
-            return null;
-        };
-    @endphp
 
-    @if($pendaftaran->foto_kk && $toBase64($pendaftaran->foto_kk))
+    @if($pendaftaran->foto_kk)
         <div class="page-break"></div>
         <div class="doc-page">
             <h3>Lampiran: Kartu Keluarga (KK)</h3>
-            <img src="{{ $toBase64($pendaftaran->foto_kk) }}" alt="Kartu Keluarga">
+            <img src="{{ public_path('storage/' . $pendaftaran->foto_kk) }}" alt="Kartu Keluarga">
         </div>
     @endif
 
-    @if($pendaftaran->foto_ktp_ortu && $toBase64($pendaftaran->foto_ktp_ortu))
+    @if($pendaftaran->foto_ktp_ortu)
         <div class="page-break"></div>
         <div class="doc-page">
             <h3>Lampiran: KTP Orang Tua</h3>
-            <img src="{{ $toBase64($pendaftaran->foto_ktp_ortu) }}" alt="KTP Orang Tua">
+            <img src="{{ public_path('storage/' . $pendaftaran->foto_ktp_ortu) }}" alt="KTP Orang Tua">
         </div>
     @endif
 
-    @if($pendaftaran->foto_akte_kelahiran && $toBase64($pendaftaran->foto_akte_kelahiran))
+    @if($pendaftaran->foto_akte_kelahiran)
         <div class="page-break"></div>
         <div class="doc-page">
             <h3>Lampiran: Akte Kelahiran</h3>
-            <img src="{{ $toBase64($pendaftaran->foto_akte_kelahiran) }}" alt="Akte Kelahiran">
+            <img src="{{ public_path('storage/' . $pendaftaran->foto_akte_kelahiran) }}" alt="Akte Kelahiran">
         </div>
     @endif
 
-    @if($pendaftaran->ijazah_terakhir && $toBase64($pendaftaran->ijazah_terakhir))
+    @if($pendaftaran->ijazah_terakhir)
         <div class="page-break"></div>
         <div class="doc-page">
             <h3>Lampiran: Ijazah / SKL</h3>
-            <img src="{{ $toBase64($pendaftaran->ijazah_terakhir) }}" alt="Ijazah / SKL">
+            <img src="{{ public_path('storage/' . $pendaftaran->ijazah_terakhir) }}" alt="Ijazah / SKL">
         </div>
     @endif
 

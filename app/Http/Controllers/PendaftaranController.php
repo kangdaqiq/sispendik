@@ -197,7 +197,7 @@ class PendaftaranController extends Controller
 
         // Generate PDF
         $pendaftaran = $pendaftaranBaru; // Untuk passing ke view
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftaran'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pendaftaran.print', compact('pendaftaran'));
 
         // Simpan PDF sementara
         $pdfFilename = 'pdf_pendaftaran/Bukti_Pendaftaran_' . $pendaftaranBaru->nisn . '_' . time() . '.pdf';
