@@ -1,4 +1,14 @@
-@php Carbon\Carbon::setLocale('id'); @endphp
+@php 
+        Carbon\Carbon::setLocale('id');
+    $isPdf = $isPdf ?? false;
+    $logoBase64 = '';
+    if ($isPdf) {
+        $logoPath = public_path('logo-smk.png');
+        if (file_exists($logoPath)) {
+            $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+        }
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 
@@ -117,26 +127,24 @@
 
         /* ---- DOKUMEN ---- */
         .doc-checklist {
-            list-style: none;
-            padding: 6px 8px;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 24px;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
         }
 
-        .doc-checklist li {
+        .doc-checklist td {
             font-size: 11px;
             color: #111;
+            padding: 4px 0;
         }
 
-        .doc-checklist li.checked::before {
+        .doc-checked::before {
             content: '✓ ';
             color: #16a34a;
             font-weight: bold;
         }
 
-        .doc-checklist li.unchecked::before {
+        .doc-unchecked::before {
             content: '✗ ';
             color: #dc2626;
         }
@@ -278,34 +286,44 @@
 
 <body>
 
-    <!-- Print Controls (screen only) -->
-    <div class="print-controls">
-        <a href="{{ route('admin.pendaftaran.show', $pendaftaran->id) }}" class="btn-back">← Kembali</a>
-        <button class="btn-print" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
-    </div>
+    @if(!$isPdf)
+        <!-- Print Controls (screen only) -->
+        <div class="print-controls">
+            <a href="{{ route('admin.pendaftaran.show', $pendaftaran->id) }}" class="btn-back">← Kembali</a>
+            <button class="btn-print" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+        </div>
+    @endif
 
     <div class="page">
 
         <!-- Header Baru -->
-        <div class="header-container">
-            <img src="{{ asset('logo-smk.png') }}" alt="Logo SMK" class="header-logo"
-                onerror="this.style.display='none'">
-            <div class="header-text">
-                <div class="header-title">
-                    Formulir Pendaftaran Peserta Didik Baru<br>
-                    SMK Assuniyah Tumijajar
-                </div>
-                <div class="header-subtitle">
-                    Status: <span
-                        class="badge badge-{{ $pendaftaran->status }}">{{ strtoupper($pendaftaran->status) }}</span>
-                    &nbsp;|&nbsp;
-                    Tanggal Daftar: {{ $pendaftaran->created_at->isoFormat('D MMMM YYYY') }}
-                    @if($pendaftaran->referral_code)
-                        &nbsp;|&nbsp; Referral: <strong>{{ $pendaftaran->referral_code }}</strong>
+        <table style="width: 100%; border-bottom: 3px solid #1e3a5f; padding-bottom: 12px; margin-bottom: 16px;">
+            <tr>
+                <td style="width: 80px; vertical-align: middle;">
+                    @if($isPdf && $logoBase64)
+                        <img src="{{ $logoBase64 }}" alt="Logo SMK" class="header-logo" style="margin-right:0;">
+                    @else
+                        <img src="{{ asset('logo-smk.png') }}" alt="Logo SMK" class="header-logo" style="margin-right:0;"
+                            onerror="this.style.display='none'">
                     @endif
-                </div>
-            </div>
-        </div>
+                </td>
+                <td style="vertical-align: middle;">
+                    <div class="header-title">
+                        Formulir Pendaftaran Peserta Didik Baru<br>
+                        SMK Assuniyah Tumijajar
+                    </div>
+                    <div class="header-subtitle">
+                        Status: <span
+                            class="badge badge-{{ $pendaftaran->status }}">{{ strtoupper($pendaftaran->status) }}</span>
+                        &nbsp;|&nbsp;
+                        Tanggal Daftar: {{ $pendaftaran->created_at->isoFormat('D MMMM YYYY') }}
+                        @if($pendaftaran->referral_code)
+                            &nbsp;|&nbsp; Referral: <strong>{{ $pendaftaran->referral_code }}</strong>
+                        @endif
+                    </div>
+                </td>
+            </tr>
+        </table>
 
         <!-- DATA DIRI -->
         <div class="section-title">A. Data Diri Siswa</div>
@@ -418,86 +436,88 @@
 
         <!-- DATA ORANG TUA -->
         <div class="section-title">C. Data Orang Tua / Wali</div>
-        <div class="two-col">
-            <div>
-                <table class="data">
-                    <tr>
-                        <td colspan="3" style="font-weight:bold; background:#f3f4f6;">Data Ayah</td>
-                    </tr>
-                    <tr>
-                        <td>Status</td>
-                        <td>:</td>
-                        <td>{{ ucwords(str_replace('_', ' ', $pendaftaran->status_ayah)) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Nama</td>
-                        <td>:</td>
-                        <td>{{ $pendaftaran->nama_ayah }}</td>
-                    </tr>
-                    @if($pendaftaran->status_ayah == 'masih_hidup')
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="width: 50%; vertical-align: top; padding-right: 8px;">
+                    <table class="data">
                         <tr>
-                            <td>No. Telepon</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->no_telp_ayah ?? '-' }}</td>
+                            <td colspan="3" style="font-weight:bold; background:#f3f4f6;">Data Ayah</td>
                         </tr>
                         <tr>
-                            <td>Pendidikan</td>
+                            <td>Status</td>
                             <td>:</td>
-                            <td>{{ $pendaftaran->pendidikan_ayah ?? '-' }}</td>
+                            <td>{{ ucwords(str_replace('_', ' ', $pendaftaran->status_ayah)) }}</td>
                         </tr>
                         <tr>
-                            <td>Pekerjaan</td>
+                            <td>Nama</td>
                             <td>:</td>
-                            <td>{{ $pendaftaran->pekerjaan_ayah ?? '-' }}</td>
+                            <td>{{ $pendaftaran->nama_ayah }}</td>
+                        </tr>
+                        @if($pendaftaran->status_ayah == 'masih_hidup')
+                            <tr>
+                                <td>No. Telepon</td>
+                                <td>:</td>
+                                <td>{{ $pendaftaran->no_telp_ayah ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Pendidikan</td>
+                                <td>:</td>
+                                <td>{{ $pendaftaran->pendidikan_ayah ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Pekerjaan</td>
+                                <td>:</td>
+                                <td>{{ $pendaftaran->pekerjaan_ayah ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Penghasilan / Bln</td>
+                                <td>:</td>
+                                <td>{{ $pendaftaran->penghasilan_ayah ?? '-' }}</td>
+                            </tr>
+                        @endif
+                    </table>
+                </td>
+                <td style="width: 50%; vertical-align: top; padding-left: 8px;">
+                    <table class="data">
+                        <tr>
+                            <td colspan="3" style="font-weight:bold; background:#f3f4f6;">Data Ibu</td>
                         </tr>
                         <tr>
-                            <td>Penghasilan / Bln</td>
+                            <td>Status</td>
                             <td>:</td>
-                            <td>{{ $pendaftaran->penghasilan_ayah ?? '-' }}</td>
-                        </tr>
-                    @endif
-                </table>
-            </div>
-            <div>
-                <table class="data">
-                    <tr>
-                        <td colspan="3" style="font-weight:bold; background:#f3f4f6;">Data Ibu</td>
-                    </tr>
-                    <tr>
-                        <td>Status</td>
-                        <td>:</td>
-                        <td>{{ ucwords(str_replace('_', ' ', $pendaftaran->status_ibu)) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Nama</td>
-                        <td>:</td>
-                        <td>{{ $pendaftaran->nama_ibu }}</td>
-                    </tr>
-                    @if($pendaftaran->status_ibu == 'masih_hidup')
-                        <tr>
-                            <td>No. Telepon</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->no_telp_ibu ?? '-' }}</td>
+                            <td>{{ ucwords(str_replace('_', ' ', $pendaftaran->status_ibu)) }}</td>
                         </tr>
                         <tr>
-                            <td>Pendidikan</td>
+                            <td>Nama</td>
                             <td>:</td>
-                            <td>{{ $pendaftaran->pendidikan_ibu ?? '-' }}</td>
+                            <td>{{ $pendaftaran->nama_ibu }}</td>
                         </tr>
-                        <tr>
-                            <td>Pekerjaan</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->pekerjaan_ibu ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Penghasilan / Bln</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->penghasilan_ibu ?? '-' }}</td>
-                        </tr>
-                    @endif
-                </table>
-            </div>
-        </div>
+                        @if($pendaftaran->status_ibu == 'masih_hidup')
+                            <tr>
+                                <td>No. Telepon</td>
+                                <td>:</td>
+                                <td>{{ $pendaftaran->no_telp_ibu ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Pendidikan</td>
+                                <td>:</td>
+                                <td>{{ $pendaftaran->pendidikan_ibu ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Pekerjaan</td>
+                                <td>:</td>
+                                <td>{{ $pendaftaran->pekerjaan_ibu ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Penghasilan / Bln</td>
+                                <td>:</td>
+                                <td>{{ $pendaftaran->penghasilan_ibu ?? '-' }}</td>
+                            </tr>
+                        @endif
+                    </table>
+                </td>
+            </tr>
+        </table>
 
         @if($pendaftaran->nama_wali)
             <table class="data" style="margin-top:6px;">
@@ -569,71 +589,72 @@
 
         <!-- DOKUMEN -->
         <div class="section-title">E. Dokumen Persyaratan</div>
-        <ul class="doc-checklist">
-            <li class="checked">Kartu Keluarga (KK)</li>
-            @if($pendaftaran->foto_ktp_ortu)
-                <li class="checked">KTP Orang Tua</li>
-            @else
-                <li class="unchecked">KTP Orang Tua</li>
-            @endif
-            @if($pendaftaran->foto_akte_kelahiran)
-                <li class="checked">Akte Kelahiran</li>
-            @else
-                <li class="unchecked">Akte Kelahiran</li>
-            @endif
-            <li class="checked">Ijazah / SKL</li>
-        </ul>
+        <table class="doc-checklist">
+            <tr>
+                <td class="doc-checked">Kartu Keluarga (KK)</td>
+                <td class="{{ $pendaftaran->foto_ktp_ortu ? 'doc-checked' : 'doc-unchecked' }}">KTP Orang Tua</td>
+            </tr>
+            <tr>
+                <td class="{{ $pendaftaran->foto_akte_kelahiran ? 'doc-checked' : 'doc-unchecked' }}">Akte Kelahiran
+                </td>
+                <td class="doc-checked">Ijazah / SKL</td>
+            </tr>
+        </table>
 
         <!-- TANDA TANGAN -->
-        <div class="ttd-row">
-            <div class="ttd-box">
-                <div class="ttd-label">Orang Tua / Wali,</div>
-                <div class="ttd-placeholder">( ______________________________ )</div>
-            </div>
-            <div class="ttd-box">
-                <div class="ttd-label">Tumijajar,
-                    {{ \Carbon\Carbon::parse($pendaftaran->created_at)->isoFormat('D MMMM YYYY') }}<br>Panitia
-                    Penerimaan,
-                </div>
-                <div class="ttd-placeholder">( ______________________________ )</div>
-            </div>
-        </div>
+        <table style="width: 100%; margin-top: 24px;">
+            <tr>
+                <td style="width: 50%; text-align: center;">
+                    <div style="font-size: 10px; margin-bottom: 45px;">Orang Tua / Wali,</div>
+                    <div style="font-size: 10px; font-weight: bold;">( ______________________________ )</div>
+                </td>
+                <td style="width: 50%; text-align: center;">
+                    <div style="font-size: 10px; margin-bottom: 45px;">
+                        Tumijajar, {{ \Carbon\Carbon::parse($pendaftaran->created_at)->isoFormat('D MMMM YYYY') }}<br>
+                        Panitia Penerimaan,
+                    </div>
+                    <div style="font-size: 10px; font-weight: bold;">( ______________________________ )</div>
+                </td>
+            </tr>
+        </table>
 
     </div>
 
-    <!-- LAMPIRAN DOKUMEN -->
+    @if(!$isPdf)
+        <!-- LAMPIRAN DOKUMEN -->
 
-    <!-- KK -->
-    <div class="page-break"></div>
-    <div class="doc-page">
-        <h3>Lampiran: Kartu Keluarga (KK)</h3>
-        <img src="{{ asset('storage/' . $pendaftaran->foto_kk) }}" alt="Kartu Keluarga">
-    </div>
-
-    <!-- KTP Ortu -->
-    @if($pendaftaran->foto_ktp_ortu)
+        <!-- KK -->
         <div class="page-break"></div>
         <div class="doc-page">
-            <h3>Lampiran: KTP Orang Tua</h3>
-            <img src="{{ asset('storage/' . $pendaftaran->foto_ktp_ortu) }}" alt="KTP Orang Tua">
+            <h3>Lampiran: Kartu Keluarga (KK)</h3>
+            <img src="{{ asset('storage/' . $pendaftaran->foto_kk) }}" alt="Kartu Keluarga">
         </div>
-    @endif
 
-    <!-- AKTE KELAHIRAN -->
-    @if($pendaftaran->foto_akte_kelahiran)
+        <!-- KTP Ortu -->
+        @if($pendaftaran->foto_ktp_ortu)
+            <div class="page-break"></div>
+            <div class="doc-page">
+                <h3>Lampiran: KTP Orang Tua</h3>
+                <img src="{{ asset('storage/' . $pendaftaran->foto_ktp_ortu) }}" alt="KTP Orang Tua">
+            </div>
+        @endif
+
+        <!-- AKTE KELAHIRAN -->
+        @if($pendaftaran->foto_akte_kelahiran)
+            <div class="page-break"></div>
+            <div class="doc-page">
+                <h3>Lampiran: Akte Kelahiran</h3>
+                <img src="{{ asset('storage/' . $pendaftaran->foto_akte_kelahiran) }}" alt="Akte Kelahiran">
+            </div>
+        @endif
+
+        <!-- IJAZAH -->
         <div class="page-break"></div>
         <div class="doc-page">
-            <h3>Lampiran: Akte Kelahiran</h3>
-            <img src="{{ asset('storage/' . $pendaftaran->foto_akte_kelahiran) }}" alt="Akte Kelahiran">
+            <h3>Lampiran: Ijazah / SKL</h3>
+            <img src="{{ asset('storage/' . $pendaftaran->ijazah_terakhir) }}" alt="Ijazah / SKL">
         </div>
     @endif
-
-    <!-- IJAZAH -->
-    <div class="page-break"></div>
-    <div class="doc-page">
-        <h3>Lampiran: Ijazah / SKL</h3>
-        <img src="{{ asset('storage/' . $pendaftaran->ijazah_terakhir) }}" alt="Ijazah / SKL">
-    </div>
 </body>
 
 </html>

@@ -199,7 +199,8 @@ class PendaftaranController extends Controller
         set_time_limit(120);
         ini_set('memory_limit', '256M');
         $pendaftaran = $pendaftaranBaru;
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftaran'))
+        $isPdf = true;
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pendaftaran.print', compact('pendaftaran', 'isPdf'))
             ->setPaper('a4', 'portrait');
 
         $pdfFilename = 'pdf_pendaftaran/Formulir_Pendaftaran_' . $pendaftaranBaru->nisn . '_' . time() . '.pdf';
