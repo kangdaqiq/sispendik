@@ -23,7 +23,10 @@ if ($handle) {
         $query .= $line . "\n";
 
         if (substr(trim($line), -1, 1) == ';') {
-            DB::connection('sqlite_wilayah')->unprepared($query);
+            $queryToExec = str_replace('COLLATE "pg_catalog"."default"', '', $query);
+            $queryToExec = str_replace('int4', 'INTEGER', $queryToExec);
+
+            DB::connection('sqlite_wilayah')->unprepared($queryToExec);
             $query = '';
             $count++;
 

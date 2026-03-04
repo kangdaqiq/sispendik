@@ -31,8 +31,12 @@ if ($handle) {
         $sql .= $line;
 
         if (substr($trimmed, -1, 1) == ';') {
+            // Remove PostgreSQL specific syntax from the dump before executing in SQLite
+            $sqlToExec = str_replace('COLLATE "pg_catalog"."default"', '', $sql);
+            $sqlToExec = str_replace('int4', 'INTEGER', $sqlToExec);
+
             try {
-                DB::connection('sqlite_wilayah')->unprepared($sql);
+                DB::connection('sqlite_wilayah')->unprepared($sqlToExec);
             }
             catch (\Exception $e) {
                 echo "Error executing query: " . substr($sql, 0, 100) . "...\n";
