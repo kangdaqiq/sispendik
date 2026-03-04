@@ -40,13 +40,14 @@ class SendWhatsAppPendaftaranNotification implements ShouldQueue
     {
         $phone = $this->pendaftaran->no_telp;
         $nama = $this->pendaftaran->nama;
+        \Carbon\Carbon::setLocale('id');
         $tgl = $this->pendaftaran->created_at->isoFormat('D MMMM YYYY');
 
         // 1. Kirim pesan notifikasi teks dahulu
         $message = "*PENDAFTARAN BERHASIL*\n\n"
             . "Halo {$nama},\n\n"
             . "Terima kasih telah mendaftar di SMK Assuniyah Tumijajar pada tanggal {$tgl}.\n"
-            . "Pendaftaran Anda telah kami terima dan sedang diproses. Berikut adalah lampiran *Bukti Pendaftaran* Anda (PDF).\n\n"
+            . "Pendaftaran Anda telah kami terima dan sedang diproses. Berikut adalah lampiran *Formulir Pendaftaran* Anda (PDF).\n\n"
             . "Mohon simpan bukti ini dengan baik.\n\n"
             . "_Panitia PPDB SMK Assuniyah Tumijajar_";
 
@@ -58,7 +59,7 @@ class SendWhatsAppPendaftaranNotification implements ShouldQueue
         // 2. Kirim dokumen PDF Bukti Pendaftaran
         Log::info("Job: Mengirim PDF Pendaftaran ke {$phone}");
 
-        $captionPdf = "Bukti Pendaftaran - {$nama}";
+        $captionPdf = "Formulir Pendaftaran - {$nama}";
         $fullPdfPath = storage_path('app/public/' . $this->pdfPath);
 
         if (file_exists($fullPdfPath)) {
