@@ -11,6 +11,11 @@ if (!file_exists($file)) {
     die("File not found\n");
 }
 
+$sqlitePath = __DIR__ . '/database/factories/database.sqlite';
+if (!file_exists($sqlitePath)) {
+    touch($sqlitePath);
+}
+
 echo "Starting import...\n";
 
 $sql = '';

@@ -3,6 +3,11 @@
 use Illuminate\Support\Facades\DB;
 
 $path = database_path('factories/db alamat.sql');
+$sqlitePath = database_path('factories/database.sqlite');
+if (!file_exists($sqlitePath)) {
+    touch($sqlitePath);
+}
+
 $handle = fopen($path, 'r');
 
 if ($handle) {
