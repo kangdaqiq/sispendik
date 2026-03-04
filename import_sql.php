@@ -32,8 +32,8 @@ if ($handle) {
 
         if (substr($trimmed, -1, 1) == ';') {
             // Remove PostgreSQL specific syntax from the dump before executing in SQLite
-            $sqlToExec = str_replace('COLLATE "pg_catalog"."default"', '', $sql);
-            $sqlToExec = str_replace('int4', 'INTEGER', $sqlToExec);
+            $sqlToExec = preg_replace('/COLLATE\s+["\']?pg_catalog["\']?\.["\']?default["\']?/i', '', $sql);
+            $sqlToExec = str_ireplace('int4', 'INTEGER', $sqlToExec);
 
             try {
                 DB::connection('sqlite_wilayah')->unprepared($sqlToExec);

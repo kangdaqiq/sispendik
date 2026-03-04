@@ -23,8 +23,8 @@ if ($handle) {
         $query .= $line . "\n";
 
         if (substr(trim($line), -1, 1) == ';') {
-            $queryToExec = str_replace('COLLATE "pg_catalog"."default"', '', $query);
-            $queryToExec = str_replace('int4', 'INTEGER', $queryToExec);
+            $queryToExec = preg_replace('/COLLATE\s+["\']?pg_catalog["\']?\.["\']?default["\']?/i', '', $query);
+            $queryToExec = str_ireplace('int4', 'INTEGER', $queryToExec);
 
             DB::connection('sqlite_wilayah')->unprepared($queryToExec);
             $query = '';
