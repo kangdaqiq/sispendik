@@ -28,49 +28,41 @@
         }
 
         /* ---- HEADER ---- */
-        .kop-surat {
+        .header-container {
             display: flex;
             align-items: center;
-            gap: 14px;
             border-bottom: 3px solid #1e3a5f;
-            padding-bottom: 10px;
-            margin-bottom: 12px;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
         }
 
-        .kop-surat img {
-            height: 70px;
+        .header-logo {
             width: 70px;
+            height: 70px;
             object-fit: contain;
+            margin-right: 18px;
         }
 
-        .kop-text h1 {
+        .header-text {
+            flex: 1;
+        }
+
+        .header-title {
             font-size: 16px;
             font-weight: bold;
             color: #1e3a5f;
-            letter-spacing: 0.5px;
-        }
-
-        .kop-text h2 {
-            font-size: 11px;
-            font-weight: normal;
-            color: #444;
-        }
-
-        .judul-form {
-            text-align: center;
-            font-size: 13px;
-            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin: 10px 0 4px;
-            color: #1e3a5f;
+            letter-spacing: 1px;
+            margin: 0 0 4px 0;
+            line-height: 1.3;
         }
 
-        .sub-judul {
-            text-align: center;
-            font-size: 10px;
-            color: #666;
-            margin-bottom: 14px;
+        .header-subtitle {
+            font-size: 11px;
+            color: #444;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* ---- SECTION ---- */
@@ -232,6 +224,42 @@
             font-weight: bold;
         }
 
+        .page-break {
+            page-break-before: always;
+            break-before: page;
+        }
+
+        .doc-page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 15mm 18mm;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .doc-page h3 {
+            font-size: 14px;
+            color: #1e3a5f;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            border-bottom: 2px solid #1e3a5f;
+            padding-bottom: 5px;
+            width: 100%;
+        }
+
+        .doc-page img {
+            max-width: 100%;
+            max-height: 250mm;
+            object-fit: contain;
+            border: 1px solid #d1d5db;
+            padding: 4px;
+            background: #f9fafb;
+        }
+
         @media print {
             .print-controls {
                 display: none;
@@ -258,25 +286,25 @@
 
     <div class="page">
 
-        <!-- Kop Surat -->
-        <div class="kop-surat">
-            <img src="{{ public_path('logo-smk.png') }}" alt="Logo SMK" onerror="this.style.display='none'">
-            <div class="kop-text">
-                <h1>SMK Assuniyah Tumijajar</h1>
-                <h2>Jl. Raya Tumijajar, Tulang Bawang Barat, Lampung</h2>
+        <!-- Header Baru -->
+        <div class="header-container">
+            <img src="{{ asset('logo-smk.png') }}" alt="Logo SMK" class="header-logo"
+                onerror="this.style.display='none'">
+            <div class="header-text">
+                <div class="header-title">
+                    Formulir Pendaftaran Peserta Didik Baru<br>
+                    SMK Assuniyah Tumijajar
+                </div>
+                <div class="header-subtitle">
+                    Status: <span
+                        class="badge badge-{{ $pendaftaran->status }}">{{ strtoupper($pendaftaran->status) }}</span>
+                    &nbsp;|&nbsp;
+                    Tanggal Daftar: {{ $pendaftaran->created_at->isoFormat('D MMMM YYYY') }}
+                    @if($pendaftaran->referral_code)
+                        &nbsp;|&nbsp; Referral: <strong>{{ $pendaftaran->referral_code }}</strong>
+                    @endif
+                </div>
             </div>
-        </div>
-
-        <div class="judul-form">Formulir Pendaftaran Peserta Didik Baru</div>
-        <div class="sub-judul">
-            Status:
-            <span class="badge badge-{{ $pendaftaran->status }}">
-                {{ strtoupper($pendaftaran->status) }}
-            </span>
-            &nbsp;|&nbsp; Tanggal Daftar: {{ $pendaftaran->created_at->isoFormat('D MMMM YYYY') }}
-            @if($pendaftaran->referral_code)
-                &nbsp;|&nbsp; Referral: <strong>{{ $pendaftaran->referral_code }}</strong>
-            @endif
         </div>
 
         <!-- DATA DIRI -->
@@ -293,9 +321,14 @@
                 <td>{{ $pendaftaran->nama_panggilan ?? '-' }}</td>
             </tr>
             <tr>
-                <td>NIK</td>
+                <td>NIK Siswa</td>
                 <td>:</td>
                 <td>{{ $pendaftaran->nik }}</td>
+            </tr>
+            <tr>
+                <td>NISN Siswa</td>
+                <td>:</td>
+                <td>{{ $pendaftaran->nisn ?? '-' }}</td>
             </tr>
             <tr>
                 <td>No. Kartu Keluarga</td>
@@ -417,6 +450,11 @@
                             <td>:</td>
                             <td>{{ $pendaftaran->pekerjaan_ayah ?? '-' }}</td>
                         </tr>
+                        <tr>
+                            <td>Penghasilan / Bln</td>
+                            <td>:</td>
+                            <td>{{ $pendaftaran->penghasilan_ayah ?? '-' }}</td>
+                        </tr>
                     @endif
                 </table>
             </div>
@@ -451,6 +489,11 @@
                             <td>:</td>
                             <td>{{ $pendaftaran->pekerjaan_ibu ?? '-' }}</td>
                         </tr>
+                        <tr>
+                            <td>Penghasilan / Bln</td>
+                            <td>:</td>
+                            <td>{{ $pendaftaran->penghasilan_ibu ?? '-' }}</td>
+                        </tr>
                     @endif
                 </table>
             </div>
@@ -480,6 +523,11 @@
                     <td>Pekerjaan</td>
                     <td>:</td>
                     <td>{{ $pendaftaran->pekerjaan_wali ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Penghasilan / Bln</td>
+                    <td>:</td>
+                    <td>{{ $pendaftaran->penghasilan_wali ?? '-' }}</td>
                 </tr>
             </table>
         @endif
@@ -545,13 +593,47 @@
             <div class="ttd-box">
                 <div class="ttd-label">Tumijajar,
                     {{ \Carbon\Carbon::parse($pendaftaran->created_at)->isoFormat('D MMMM YYYY') }}<br>Panitia
-                    Penerimaan,</div>
+                    Penerimaan,
+                </div>
                 <div class="ttd-placeholder">( ______________________________ )</div>
             </div>
         </div>
 
     </div>
 
+    <!-- LAMPIRAN DOKUMEN -->
+
+    <!-- KK -->
+    <div class="page-break"></div>
+    <div class="doc-page">
+        <h3>Lampiran: Kartu Keluarga (KK)</h3>
+        <img src="{{ asset('storage/' . $pendaftaran->foto_kk) }}" alt="Kartu Keluarga">
+    </div>
+
+    <!-- KTP Ortu -->
+    @if($pendaftaran->foto_ktp_ortu)
+        <div class="page-break"></div>
+        <div class="doc-page">
+            <h3>Lampiran: KTP Orang Tua</h3>
+            <img src="{{ asset('storage/' . $pendaftaran->foto_ktp_ortu) }}" alt="KTP Orang Tua">
+        </div>
+    @endif
+
+    <!-- AKTE KELAHIRAN -->
+    @if($pendaftaran->foto_akte_kelahiran)
+        <div class="page-break"></div>
+        <div class="doc-page">
+            <h3>Lampiran: Akte Kelahiran</h3>
+            <img src="{{ asset('storage/' . $pendaftaran->foto_akte_kelahiran) }}" alt="Akte Kelahiran">
+        </div>
+    @endif
+
+    <!-- IJAZAH -->
+    <div class="page-break"></div>
+    <div class="doc-page">
+        <h3>Lampiran: Ijazah / SKL</h3>
+        <img src="{{ asset('storage/' . $pendaftaran->ijazah_terakhir) }}" alt="Ijazah / SKL">
+    </div>
 </body>
 
 </html>

@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Pendaftaran Siswa Baru') }} - Pendaftaran</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('icon.ico') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -70,9 +71,6 @@
                         </span>
                         <span class="school-name">SMK Assuniyah Tumijajar</span>
                     </div>
-                </div>
-                <div>
-                    <a href="/" class="back-link">&larr; Kembali ke Beranda</a>
                 </div>
             </div>
         </div>

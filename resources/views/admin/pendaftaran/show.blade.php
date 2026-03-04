@@ -95,6 +95,10 @@
                             <td>{{ $pendaftaran->nik }}</td>
                         </tr>
                         <tr>
+                            <th>NISN</th>
+                            <td>{{ $pendaftaran->nisn ?? '-' }}</td>
+                        </tr>
+                        <tr>
                             <th>No KK</th>
                             <td>{{ $pendaftaran->no_kk }}</td>
                         </tr>
@@ -181,6 +185,10 @@
                                 <th>Pekerjaan</th>
                                 <td>{{ $pendaftaran->pekerjaan_ayah ?? '-' }}</td>
                             </tr>
+                            <tr>
+                                <th>Penghasilan per Bulan</th>
+                                <td>{{ $pendaftaran->penghasilan_ayah ?? '-' }}</td>
+                            </tr>
                         @endif
                     </table>
 
@@ -207,6 +215,10 @@
                                 <th>Pekerjaan</th>
                                 <td>{{ $pendaftaran->pekerjaan_ibu ?? '-' }}</td>
                             </tr>
+                            <tr>
+                                <th>Penghasilan per Bulan</th>
+                                <td>{{ $pendaftaran->penghasilan_ibu ?? '-' }}</td>
+                            </tr>
                         @endif
                     </table>
 
@@ -228,6 +240,10 @@
                             <tr>
                                 <th>No Telp</th>
                                 <td>{{ $pendaftaran->no_telp_wali ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Penghasilan per Bulan</th>
+                                <td>{{ $pendaftaran->penghasilan_wali ?? '-' }}</td>
                             </tr>
                         </table>
                     @endif

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'SISPENDIK') - Sistem Informasi Pendidikan</title>
-
+    <link rel="icon" type="image/x-icon" href="{{ asset('icon.ico') }}">
     <!-- Google Fonts -->
     <link href="{{ asset('fonts/sourcesanspro.css') }}" rel="stylesheet">
     <!-- Font Awesome -->
@@ -217,11 +217,9 @@
         <!-- ============================================================ SIDEBAR -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="{{ route('dashboard') }}" class="brand-link">
-                <span class="brand-image img-circle elevation-3"
-                    style="width:33px;height:33px;background:linear-gradient(135deg,#007bff,#17a2b8);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;">
-                    <i class="fas fa-graduation-cap"></i>
-                </span>
+            <a href="{{ route('dashboard') }}" class="brand-link" style="display: flex; align-items: center;">
+                <img src="{{ asset('logo-smk.png') }}" alt="Logo SMK" class="brand-image"
+                    style="height: 33px; width: 33px; object-fit: contain;">
                 <span class="brand-text font-weight-bold ml-2">SISPENDIK</span>
             </a>
 

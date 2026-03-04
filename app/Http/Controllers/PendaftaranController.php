@@ -22,6 +22,7 @@ class PendaftaranController extends Controller
     {
         $rules = [
             'nik' => 'required|string|unique:pendaftarans,nik',
+            'nisn' => 'nullable|string|unique:pendaftarans,nisn',
             'no_kk' => 'required|string',
             'nama' => 'required|string|max:255',
             'nama_panggilan' => 'nullable|string|max:255',
@@ -50,11 +51,15 @@ class PendaftaranController extends Controller
             'nama_ayah' => 'required|string|max:255',
             'pendidikan_ayah' => 'required_if:status_ayah,masih_hidup|nullable|string|max:255',
             'pekerjaan_ayah' => 'required_if:status_ayah,masih_hidup|nullable|string|max:255',
+            'pekerjaan_ayah_lainnya' => 'nullable|string|max:255',
+            'penghasilan_ayah' => 'required_if:status_ayah,masih_hidup|nullable|string|max:255',
 
             'status_ibu' => 'required|in:masih_hidup,sudah_meninggal',
             'nama_ibu' => 'required|string|max:255',
             'pendidikan_ibu' => 'required_if:status_ibu,masih_hidup|nullable|string|max:255',
             'pekerjaan_ibu' => 'required_if:status_ibu,masih_hidup|nullable|string|max:255',
+            'pekerjaan_ibu_lainnya' => 'nullable|string|max:255',
+            'penghasilan_ibu' => 'required_if:status_ibu,masih_hidup|nullable|string|max:255',
 
             'no_telp_ayah' => 'nullable|string|max:20',
             'no_telp_ibu' => 'nullable|string|max:20',
@@ -72,6 +77,8 @@ class PendaftaranController extends Controller
             ],
             'pendidikan_wali' => 'nullable|string|max:255',
             'pekerjaan_wali' => 'nullable|string|max:255',
+            'pekerjaan_wali_lainnya' => 'nullable|string|max:255',
+            'penghasilan_wali' => 'nullable|string|max:255',
             'no_telp_wali' => 'nullable|string|max:20',
 
             'alamat_ortu_sama' => 'nullable|boolean',
@@ -136,6 +143,17 @@ class PendaftaranController extends Controller
         }
 
         $validated = $validator->validated();
+
+        if (($validated['pekerjaan_ayah'] ?? '') === 'Lainnya') {
+            $validated['pekerjaan_ayah'] = $validated['pekerjaan_ayah_lainnya'] ?? 'Lainnya';
+        }
+        if (($validated['pekerjaan_ibu'] ?? '') === 'Lainnya') {
+            $validated['pekerjaan_ibu'] = $validated['pekerjaan_ibu_lainnya'] ?? 'Lainnya';
+        }
+        if (($validated['pekerjaan_wali'] ?? '') === 'Lainnya') {
+            $validated['pekerjaan_wali'] = $validated['pekerjaan_wali_lainnya'] ?? 'Lainnya';
+        }
+        unset($validated['pekerjaan_ayah_lainnya'], $validated['pekerjaan_ibu_lainnya'], $validated['pekerjaan_wali_lainnya']);
 
         if ($alamatSama == 1) {
             $validated['provinsi_ortu'] = $validated['provinsi'] ?? null;
