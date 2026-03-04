@@ -1,5 +1,5 @@
 @php 
-        Carbon\Carbon::setLocale('id');
+            Carbon\Carbon::setLocale('id');
     $isPdf = $isPdf ?? false;
     $logoBase64 = '';
     if ($isPdf) {
@@ -31,7 +31,7 @@
         }
 
         .page {
-            width: 210mm;
+            width: 100%;
             min-height: 297mm;
             margin: 0 auto;
             padding: 15mm 18mm;
