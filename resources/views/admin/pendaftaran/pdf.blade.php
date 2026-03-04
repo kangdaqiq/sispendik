@@ -21,16 +21,14 @@
         }
 
         .page {
-            width: 210mm;
-            min-height: 297mm;
+            width: 100%;
             margin: 0 auto;
             padding: 15mm 18mm;
         }
 
         /* ---- HEADER ---- */
-        .header-container {
-            display: flex;
-            align-items: center;
+        .header-table {
+            width: 100%;
             border-bottom: 3px solid #1e3a5f;
             padding-bottom: 12px;
             margin-bottom: 16px;
@@ -39,12 +37,11 @@
         .header-logo {
             width: 70px;
             height: 70px;
-            object-fit: contain;
-            margin-right: 18px;
         }
 
         .header-text {
-            flex: 1;
+            vertical-align: middle;
+            padding-left: 15px;
         }
 
         .header-title {
@@ -60,9 +57,6 @@
         .header-subtitle {
             font-size: 11px;
             color: #444;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         /* ---- SECTION ---- */
@@ -105,138 +99,59 @@
             background: #f9fafb;
         }
 
-        /* ---- TWO COLUMN ---- */
-        .two-col {
-            display: flex;
-            gap: 16px;
+        /* ---- TWO COLUMN USING TABLE ---- */
+        table.two-col-table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .two-col>div {
-            flex: 1;
+        table.two-col-table td {
+            width: 50%;
+            vertical-align: top;
+            padding: 0 8px 0 0;
         }
 
-        /* ---- DOKUMEN ---- */
-        .doc-checklist {
-            list-style: none;
-            padding: 6px 8px;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 24px;
-        }
-
-        .doc-checklist li {
-            font-size: 11px;
-            color: #111;
-        }
-
-        .doc-checklist li.checked::before {
-            content: '✓ ';
-            color: #16a34a;
-            font-weight: bold;
-        }
-
-        .doc-checklist li.unchecked::before {
-            content: '✗ ';
-            color: #dc2626;
+        table.two-col-table td+td {
+            padding: 0 0 0 8px;
         }
 
         /* ---- STATUS BADGE ---- */
         .badge {
             display: inline-block;
-            padding: 2px 10px;
-            border-radius: 9999px;
-            font-size: 10px;
+            padding: 2px 5px;
             font-weight: bold;
-        }
-
-        .badge-pending {
-            background: #fef9c3;
-            color: #92400e;
-            border: 1px solid #fcd34d;
-        }
-
-        .badge-diterima {
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #86efac;
-        }
-
-        .badge-ditolak {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fca5a5;
         }
 
         /* ---- TANDA TANGAN ---- */
-        .ttd-row {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 24px;
-            gap: 20px;
-        }
-
-        .ttd-box {
-            flex: 1;
+        table.ttd-table {
+            width: 100%;
+            margin-top: 30px;
             text-align: center;
         }
 
-        .ttd-box .ttd-label {
+        table.ttd-table td {
+            width: 50%;
+            vertical-align: bottom;
+        }
+
+        .ttd-label {
             font-size: 10px;
-            margin-bottom: 45px;
+            margin-bottom: 60px;
         }
 
-        .ttd-box .ttd-placeholder {
+        .ttd-placeholder {
             font-size: 10px;
-            font-weight: bold;
-        }
-
-        /* ---- PRINT CONTROLS (screen only) ---- */
-        .print-controls {
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            display: flex;
-            gap: 8px;
-            z-index: 999;
-        }
-
-        .btn-print {
-            background: #1e3a5f;
-            color: #fff;
-            border: none;
-            padding: 9px 20px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-back {
-            background: #fff;
-            color: #374151;
-            border: 1px solid #d1d5db;
-            padding: 9px 20px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            text-decoration: none;
             font-weight: bold;
         }
 
         .page-break {
             page-break-before: always;
-            break-before: page;
         }
 
         .doc-page {
-            width: 210mm;
-            min-height: 297mm;
-            margin: 0 auto;
+            width: 100%;
             padding: 15mm 18mm;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            text-align: center;
         }
 
         .doc-page h3 {
@@ -245,33 +160,14 @@
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            text-align: center;
             border-bottom: 2px solid #1e3a5f;
             padding-bottom: 5px;
-            width: 100%;
         }
 
         .doc-page img {
             max-width: 100%;
-            max-height: 250mm;
-            object-fit: contain;
+            max-height: 800px;
             border: 1px solid #d1d5db;
-            padding: 4px;
-            background: #f9fafb;
-        }
-
-        @media print {
-            .print-controls {
-                display: none;
-            }
-
-            .page {
-                padding: 10mm 15mm;
-            }
-
-            body {
-                background: #fff;
-            }
         }
     </style>
 </head>
@@ -280,26 +176,33 @@
 
     <div class="page">
 
-        <!-- Header Baru -->
-        <div class="header-container">
-            <img src="{{ asset('logo-smk.png') }}" alt="Logo SMK" class="header-logo"
-                onerror="this.style.display='none'">
-            <div class="header-text">
-                <div class="header-title">
-                    Formulir Pendaftaran Peserta Didik Baru<br>
-                    SMK Assuniyah Tumijajar
-                </div>
-                <div class="header-subtitle">
-                    Status: <span
-                        class="badge badge-{{ $pendaftaran->status }}">{{ strtoupper($pendaftaran->status) }}</span>
-                    &nbsp;|&nbsp;
-                    Tanggal Daftar: {{ $pendaftaran->created_at->isoFormat('D MMMM YYYY') }}
-                    @if($pendaftaran->referral_code)
-                        &nbsp;|&nbsp; Referral: <strong>{{ $pendaftaran->referral_code }}</strong>
+        <!-- Header -->
+        <table class="header-table">
+            <tr>
+                @php
+                    // Helper agar DOMPDF bisa mengambil gambar logo dari source server secara absolut
+                    $logoPath = public_path('logo-smk.png');
+                    $logoSrc = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : '';
+                @endphp
+                <td style="width: 80px;">
+                    @if($logoSrc)
+                        <img src="{{ $logoSrc }}" alt="Logo SMK" class="header-logo">
                     @endif
-                </div>
-            </div>
-        </div>
+                </td>
+                <td class="header-text">
+                    <div class="header-title">
+                        Formulir Pendaftaran Peserta Didik Baru<br>
+                        SMK Assuniyah Tumijajar
+                    </div>
+                    <div class="header-subtitle">
+                        Status: <span
+                            class="badge badge-{{ $pendaftaran->status }}">{{ strtoupper($pendaftaran->status) }}</span>
+                        &nbsp;|&nbsp;
+                        Tanggal Daftar: {{ $pendaftaran->created_at->isoFormat('D MMMM YYYY') }}
+                    </div>
+                </td>
+            </tr>
+        </table>
 
         <!-- DATA DIRI -->
         <div class="section-title">A. Data Diri Siswa</div>
@@ -338,8 +241,7 @@
                 <td>Tempat, Tgl Lahir</td>
                 <td>:</td>
                 <td>{{ $pendaftaran->tempat_lahir }},
-                    {{ \Carbon\Carbon::parse($pendaftaran->tanggal_lahir)->isoFormat('D MMMM YYYY') }}
-                </td>
+                    {{ \Carbon\Carbon::parse($pendaftaran->tanggal_lahir)->isoFormat('D MMMM YYYY') }}</td>
             </tr>
             <tr>
                 <td>Agama</td>
@@ -356,18 +258,6 @@
                 <td>:</td>
                 <td>{{ $pendaftaran->sekolah_asal }}</td>
             </tr>
-            <tr>
-                <td>Status Anak</td>
-                <td>:</td>
-                <td>{{ ucfirst($pendaftaran->status_anak) }}, anak ke-{{ $pendaftaran->anak_ke }} dari
-                    {{ $pendaftaran->dari_bersaudara }} bersaudara
-                </td>
-            </tr>
-            <tr>
-                <td>Berat / Tinggi Badan</td>
-                <td>:</td>
-                <td>{{ $pendaftaran->berat_badan }} kg / {{ $pendaftaran->tinggi_badan }} cm</td>
-            </tr>
         </table>
 
         <!-- ALAMAT -->
@@ -379,14 +269,9 @@
                 <td>{{ $pendaftaran->alamat_detail }}</td>
             </tr>
             <tr>
-                <td>RT / RW</td>
-                <td>:</td>
-                <td>{{ $pendaftaran->rt ?? '-' }} / {{ $pendaftaran->rw ?? '-' }}</td>
-            </tr>
-            <tr>
                 <td>Desa / Kelurahan</td>
                 <td>:</td>
-                <td>{{ $pendaftaran->desa }}</td>
+                <td>{{ $pendaftaran->desa }}, RT {{ $pendaftaran->rt ?? '-' }} / RW {{ $pendaftaran->rw ?? '-' }}</td>
             </tr>
             <tr>
                 <td>Kecamatan</td>
@@ -403,231 +288,129 @@
                 <td>:</td>
                 <td>{{ $pendaftaran->provinsi }}</td>
             </tr>
-            <tr>
-                <td>Kode Pos</td>
-                <td>:</td>
-                <td>{{ $pendaftaran->kode_pos ?? '-' }}</td>
-            </tr>
         </table>
 
         <!-- DATA ORANG TUA -->
         <div class="section-title">C. Data Orang Tua / Wali</div>
-        <div class="two-col">
-            <div>
-                <table class="data">
-                    <tr>
-                        <td colspan="3" style="font-weight:bold; background:#f3f4f6;">Data Ayah</td>
-                    </tr>
-                    <tr>
-                        <td>Status</td>
-                        <td>:</td>
-                        <td>{{ ucwords(str_replace('_', ' ', $pendaftaran->status_ayah)) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Nama</td>
-                        <td>:</td>
-                        <td>{{ $pendaftaran->nama_ayah }}</td>
-                    </tr>
-                    @if($pendaftaran->status_ayah == 'masih_hidup')
-                        <tr>
-                            <td>No. Telepon</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->no_telp_ayah ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Pendidikan</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->pendidikan_ayah ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Pekerjaan</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->pekerjaan_ayah ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Penghasilan / Bln</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->penghasilan_ayah ?? '-' }}</td>
-                        </tr>
-                    @endif
-                </table>
-            </div>
-            <div>
-                <table class="data">
-                    <tr>
-                        <td colspan="3" style="font-weight:bold; background:#f3f4f6;">Data Ibu</td>
-                    </tr>
-                    <tr>
-                        <td>Status</td>
-                        <td>:</td>
-                        <td>{{ ucwords(str_replace('_', ' ', $pendaftaran->status_ibu)) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Nama</td>
-                        <td>:</td>
-                        <td>{{ $pendaftaran->nama_ibu }}</td>
-                    </tr>
-                    @if($pendaftaran->status_ibu == 'masih_hidup')
-                        <tr>
-                            <td>No. Telepon</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->no_telp_ibu ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Pendidikan</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->pendidikan_ibu ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Pekerjaan</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->pekerjaan_ibu ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Penghasilan / Bln</td>
-                            <td>:</td>
-                            <td>{{ $pendaftaran->penghasilan_ibu ?? '-' }}</td>
-                        </tr>
-                    @endif
-                </table>
-            </div>
-        </div>
 
-        @if($pendaftaran->nama_wali)
-            <table class="data" style="margin-top:6px;">
-                <tr>
-                    <td colspan="3" style="font-weight:bold; background:#f3f4f6;">Data Wali</td>
-                </tr>
-                <tr>
-                    <td>Nama Wali</td>
-                    <td>:</td>
-                    <td>{{ $pendaftaran->nama_wali }}</td>
-                </tr>
-                <tr>
-                    <td>No. Telepon</td>
-                    <td>:</td>
-                    <td>{{ $pendaftaran->no_telp_wali ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td>Pendidikan</td>
-                    <td>:</td>
-                    <td>{{ $pendaftaran->pendidikan_wali ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td>Pekerjaan</td>
-                    <td>:</td>
-                    <td>{{ $pendaftaran->pekerjaan_wali ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td>Penghasilan / Bln</td>
-                    <td>:</td>
-                    <td>{{ $pendaftaran->penghasilan_wali ?? '-' }}</td>
-                </tr>
-            </table>
-        @endif
-
-        <!-- ALAMAT ORANG TUA -->
-        <div class="section-title">D. Alamat Orang Tua / Wali</div>
-        <table class="data">
+        <table class="two-col-table">
             <tr>
-                <td>Alamat Detail</td>
-                <td>:</td>
-                <td>{{ $pendaftaran->alamat_detail_ortu }}</td>
-            </tr>
-            <tr>
-                <td>RT / RW</td>
-                <td>:</td>
-                <td>{{ $pendaftaran->rt_ortu ?? '-' }} / {{ $pendaftaran->rw_ortu ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>Desa / Kelurahan</td>
-                <td>:</td>
-                <td>{{ $pendaftaran->desa_ortu }}</td>
-            </tr>
-            <tr>
-                <td>Kecamatan</td>
-                <td>:</td>
-                <td>{{ $pendaftaran->kecamatan_ortu }}</td>
-            </tr>
-            <tr>
-                <td>Kabupaten / Kota</td>
-                <td>:</td>
-                <td>{{ $pendaftaran->kabupaten_ortu }}</td>
-            </tr>
-            <tr>
-                <td>Provinsi</td>
-                <td>:</td>
-                <td>{{ $pendaftaran->provinsi_ortu }}</td>
+                <td>
+                    <table class="data">
+                        <tr>
+                            <td colspan="3" style="font-weight:bold; background:#e2e8f0; text-align:center;">Data Ayah
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>:</td>
+                            <td>{{ ucwords(str_replace('_', ' ', $pendaftaran->status_ayah)) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Nama</td>
+                            <td>:</td>
+                            <td>{{ $pendaftaran->nama_ayah }}</td>
+                        </tr>
+                        @if($pendaftaran->status_ayah == 'masih_hidup')
+                            <tr>
+                                <td>Pekerjaan</td>
+                                <td>:</td>
+                                <td>{{ $pendaftaran->pekerjaan_ayah ?? '-' }}</td>
+                            </tr>
+                        @endif
+                    </table>
+                </td>
+                <td>
+                    <table class="data">
+                        <tr>
+                            <td colspan="3" style="font-weight:bold; background:#e2e8f0; text-align:center;">Data Ibu
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>:</td>
+                            <td>{{ ucwords(str_replace('_', ' ', $pendaftaran->status_ibu)) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Nama</td>
+                            <td>:</td>
+                            <td>{{ $pendaftaran->nama_ibu }}</td>
+                        </tr>
+                        @if($pendaftaran->status_ibu == 'masih_hidup')
+                            <tr>
+                                <td>Pekerjaan</td>
+                                <td>:</td>
+                                <td>{{ $pendaftaran->pekerjaan_ibu ?? '-' }}</td>
+                            </tr>
+                        @endif
+                    </table>
+                </td>
             </tr>
         </table>
 
-        <!-- DOKUMEN -->
-        <div class="section-title">E. Dokumen Persyaratan</div>
-        <ul class="doc-checklist">
-            <li class="checked">Kartu Keluarga (KK)</li>
-            @if($pendaftaran->foto_ktp_ortu)
-                <li class="checked">KTP Orang Tua</li>
-            @else
-                <li class="unchecked">KTP Orang Tua</li>
-            @endif
-            @if($pendaftaran->foto_akte_kelahiran)
-                <li class="checked">Akte Kelahiran</li>
-            @else
-                <li class="unchecked">Akte Kelahiran</li>
-            @endif
-            <li class="checked">Ijazah / SKL</li>
-        </ul>
-
         <!-- TANDA TANGAN -->
-        <div class="ttd-row">
-            <div class="ttd-box">
-                <div class="ttd-label">Orang Tua / Wali,</div>
-                <div class="ttd-placeholder">( ______________________________ )</div>
-            </div>
-            <div class="ttd-box">
-                <div class="ttd-label">Tumijajar,
-                    {{ \Carbon\Carbon::parse($pendaftaran->created_at)->isoFormat('D MMMM YYYY') }}<br>Panitia
-                    Penerimaan,
-                </div>
-                <div class="ttd-placeholder">( ______________________________ )</div>
-            </div>
-        </div>
+        <table class="ttd-table">
+            <tr>
+                <td>
+                    <div class="ttd-label">Orang Tua / Wali,</div>
+                    <div class="ttd-placeholder">( ______________________________ )</div>
+                </td>
+                <td>
+                    <div class="ttd-label">Tumijajar,
+                        {{ \Carbon\Carbon::parse($pendaftaran->created_at)->isoFormat('D MMMM YYYY') }}<br>Panitia
+                        Penerimaan,</div>
+                    <div class="ttd-placeholder">( ______________________________ )</div>
+                </td>
+            </tr>
+        </table>
 
     </div>
 
     <!-- LAMPIRAN DOKUMEN -->
+    @php
+        // Helper function for converting storage files to base64 for reliable DOMPDF output
+        $toBase64 = function ($path) {
+            $absPath = storage_path('app/public/' . $path);
+            if ($path && file_exists($absPath)) {
+                $ext = pathinfo($absPath, PATHINFO_EXTENSION);
+                return 'data:image/' . $ext . ';base64,' . base64_encode(file_get_contents($absPath));
+            }
+            return null;
+        };
+    @endphp
 
-    <!-- KK -->
-    <div class="page-break"></div>
-    <div class="doc-page">
-        <h3>Lampiran: Kartu Keluarga (KK)</h3>
-        <img src="{{ asset('storage/' . $pendaftaran->foto_kk) }}" alt="Kartu Keluarga">
-    </div>
+    @if($pendaftaran->foto_kk && $toBase64($pendaftaran->foto_kk))
+        <div class="page-break"></div>
+        <div class="doc-page">
+            <h3>Lampiran: Kartu Keluarga (KK)</h3>
+            <img src="{{ $toBase64($pendaftaran->foto_kk) }}" alt="Kartu Keluarga">
+        </div>
+    @endif
 
-    <!-- KTP Ortu -->
-    @if($pendaftaran->foto_ktp_ortu)
+    @if($pendaftaran->foto_ktp_ortu && $toBase64($pendaftaran->foto_ktp_ortu))
         <div class="page-break"></div>
         <div class="doc-page">
             <h3>Lampiran: KTP Orang Tua</h3>
-            <img src="{{ asset('storage/' . $pendaftaran->foto_ktp_ortu) }}" alt="KTP Orang Tua">
+            <img src="{{ $toBase64($pendaftaran->foto_ktp_ortu) }}" alt="KTP Orang Tua">
         </div>
     @endif
 
-    <!-- AKTE KELAHIRAN -->
-    @if($pendaftaran->foto_akte_kelahiran)
+    @if($pendaftaran->foto_akte_kelahiran && $toBase64($pendaftaran->foto_akte_kelahiran))
         <div class="page-break"></div>
         <div class="doc-page">
             <h3>Lampiran: Akte Kelahiran</h3>
-            <img src="{{ asset('storage/' . $pendaftaran->foto_akte_kelahiran) }}" alt="Akte Kelahiran">
+            <img src="{{ $toBase64($pendaftaran->foto_akte_kelahiran) }}" alt="Akte Kelahiran">
         </div>
     @endif
 
-    <!-- IJAZAH -->
-    <div class="page-break"></div>
-    <div class="doc-page">
-        <h3>Lampiran: Ijazah / SKL</h3>
-        <img src="{{ asset('storage/' . $pendaftaran->ijazah_terakhir) }}" alt="Ijazah / SKL">
-    </div>
+    @if($pendaftaran->ijazah_terakhir && $toBase64($pendaftaran->ijazah_terakhir))
+        <div class="page-break"></div>
+        <div class="doc-page">
+            <h3>Lampiran: Ijazah / SKL</h3>
+            <img src="{{ $toBase64($pendaftaran->ijazah_terakhir) }}" alt="Ijazah / SKL">
+        </div>
+    @endif
+
 </body>
 
 </html>
