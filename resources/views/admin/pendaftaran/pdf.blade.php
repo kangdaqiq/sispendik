@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Bukti Pendaftaran - {{ $pendaftaran->nama }}</title>
+    <title>Formulir Pendaftaran - {{ $pendaftaran->nama }}</title>
     <style>
         * {
             margin: 0;
@@ -147,7 +147,7 @@
                 </td>
                 <td class="header-text-td">
                     <div class="header-title">
-                        Bukti Pendaftaran Peserta Didik Baru<br>
+                        Formulir Pendaftaran Peserta Didik Baru<br>
                         SMK Assuniyah Tumijajar
                     </div>
                     <div class="header-sub">
@@ -199,7 +199,8 @@
                 <td>Tempat, Tanggal Lahir</td>
                 <td>:</td>
                 <td>{{ $pendaftaran->tempat_lahir }},
-                    {{ \Carbon\Carbon::parse($pendaftaran->tanggal_lahir)->isoFormat('D MMMM YYYY') }}</td>
+                    {{ \Carbon\Carbon::parse($pendaftaran->tanggal_lahir)->isoFormat('D MMMM YYYY') }}
+                </td>
             </tr>
             <tr>
                 <td>Agama</td>
@@ -220,7 +221,8 @@
                 <td>Status Anak</td>
                 <td>:</td>
                 <td>{{ ucfirst($pendaftaran->status_anak) }}, anak ke-{{ $pendaftaran->anak_ke }} dari
-                    {{ $pendaftaran->dari_bersaudara }} bersaudara</td>
+                    {{ $pendaftaran->dari_bersaudara }} bersaudara
+                </td>
             </tr>
             <tr>
                 <td>Berat / Tinggi Badan</td>
@@ -359,7 +361,8 @@
                 <td>Desa / RT / RW</td>
                 <td>:</td>
                 <td>{{ $pendaftaran->desa_ortu }}, RT {{ $pendaftaran->rt_ortu ?? '-' }} / RW
-                    {{ $pendaftaran->rw_ortu ?? '-' }}</td>
+                    {{ $pendaftaran->rw_ortu ?? '-' }}
+                </td>
             </tr>
             <tr>
                 <td>Kecamatan</td>
