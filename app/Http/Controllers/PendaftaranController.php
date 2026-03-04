@@ -196,6 +196,7 @@ class PendaftaranController extends Controller
         $pendaftaranBaru = \App\Models\Pendaftaran::create($validated);
 
         // Generate PDF synchronous (cepat karena hanya data teks)
+        set_time_limit(120);
         ini_set('memory_limit', '256M');
         $pendaftaran = $pendaftaranBaru;
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftaran'))

@@ -1,4 +1,7 @@
-@php Carbon\Carbon::setLocale('id'); @endphp
+@php Carbon\Carbon::setLocale('id');
+    $logoPath = public_path('logo-smk.png');
+    $logoBase64 = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : '';
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 
@@ -143,7 +146,9 @@
         <table class="header-tbl">
             <tr>
                 <td style="width:70px;">
-                    <img src="{{ public_path('logo-smk.png') }}" alt="Logo" class="header-logo">
+                    @if($logoBase64)
+                        <img src="{{ $logoBase64 }}" alt="Logo" class="header-logo">
+                    @endif
                 </td>
                 <td class="header-text-td">
                     <div class="header-title">
