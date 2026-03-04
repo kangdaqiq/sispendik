@@ -195,9 +195,11 @@ class PendaftaranController extends Controller
 
         $pendaftaranBaru = \App\Models\Pendaftaran::create($validated);
 
-        // Generate PDF
-        $pendaftaran = $pendaftaranBaru; // Untuk passing ke view
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pendaftaran.print', compact('pendaftaran'));
+        // Generate PDF (hanya data diri, tanpa lampiran gambar)
+        set_time_limit(120);
+        $pendaftaran = $pendaftaranBaru;
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pendaftaran.pdf', compact('pendaftaran'))
+            ->setPaper('a4', 'portrait');
 
         // Simpan PDF sementara
         $pdfFilename = 'pdf_pendaftaran/Bukti_Pendaftaran_' . $pendaftaranBaru->nisn . '_' . time() . '.pdf';
