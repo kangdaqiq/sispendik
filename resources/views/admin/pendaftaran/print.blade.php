@@ -1,5 +1,5 @@
 @php 
-                                                                                Carbon\Carbon::setLocale('id');
+                                                                                    Carbon\Carbon::setLocale('id');
     $isPdf = $isPdf ?? false;
     $logoBase64 = '';
 
@@ -678,7 +678,22 @@
             </tr>
         </table>
 
-
+        <!-- TANDA TANGAN -->
+        <table style="width: 100%; margin-top: 24px; page-break-inside: avoid;">
+            <tr>
+                <td style="width: 50%; text-align: center;">
+                    <div style="font-size: 10px; margin-bottom: 45px;">Orang Tua / Wali,</div>
+                    <div style="font-size: 10px; font-weight: bold;">( ______________________________ )</div>
+                </td>
+                <td style="width: 50%; text-align: center;">
+                    <div style="font-size: 10px; margin-bottom: 45px;">
+                        Tumijajar, {{ \Carbon\Carbon::parse($pendaftaran->created_at)->isoFormat('D MMMM YYYY') }}<br>
+                        Panitia Penerimaan,
+                    </div>
+                    <div style="font-size: 10px; font-weight: bold;">( ______________________________ )</div>
+                </td>
+            </tr>
+        </table>
 
         <!-- LAMPIRAN DOKUMEN -->
 
