@@ -6,7 +6,7 @@ $kernel->bootstrap();
 
 use Illuminate\Support\Facades\DB;
 
-$file = 'D:\SISPENDIK\database\factories\db alamat.sql';
+$file = __DIR__ . '/database/factories/db alamat.sql';
 if (!file_exists($file)) {
     die("File not found\n");
 }
@@ -28,7 +28,8 @@ if ($handle) {
         if (substr($trimmed, -1, 1) == ';') {
             try {
                 DB::unprepared($sql);
-            } catch (\Exception $e) {
+            }
+            catch (\Exception $e) {
                 echo "Error executing query: " . substr($sql, 0, 100) . "...\n";
                 echo $e->getMessage() . "\n";
             }
