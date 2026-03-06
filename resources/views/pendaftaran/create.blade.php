@@ -192,8 +192,40 @@
                         });
                         
                         if (isValid) {
-                            step = 2; 
-                            window.scrollTo({top: 0, behavior: 'smooth'});
+                            // Validasi NIK/NISN via AJAX
+                            let nik = document.getElementById('nik').value;
+                            let nisn = document.getElementById('nisn').value;
+                            
+                            btn.disabled = true;
+                            btn.innerHTML = 'Memeriksa...';
+
+                            fetch('{{ route('pendaftaran.checkNikNisn') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name=&quot;csrf-token&quot;]').getAttribute('content')
+                                },
+                                body: JSON.stringify({ nik: nik, nisn: nisn })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                btn.disabled = false;
+                                btn.innerHTML = originalText;
+                                
+                                if (data.status === 'error') {
+                                    let errorMsg = Object.values(data.errors).join('\n');
+                                    alert('Peringatan!\n\n' + errorMsg);
+                                } else {
+                                    step = 2; 
+                                    window.scrollTo({top: 0, behavior: 'smooth'});
+                                }
+                            })
+                            .catch(error => {
+                                btn.disabled = false;
+                                btn.innerHTML = originalText;
+                                alert('Terjadi kesalahan saat memeriksa NIK/NISN. Silakan coba lagi.');
+                                console.error('Error:', error);
+                            });
                         } else {
                             if (firstInvalid) {
                                 firstInvalid.reportValidity();
@@ -203,6 +235,7 @@
                     "
                     class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition-colors flex items-center gap-2">
                     Selanjutnya
+
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -767,51 +800,126 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                     <!-- Kartu Keluarga -->
-                    <div
-                        class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors">
+                    <div x-data="{
+                            fileStatus: '{{ old('temp_foto_kk') ? 'uploaded' : 'idle' }}',
+                            fileName: '{{ old('temp_foto_kk_name', '') }}',
+                            errorMessage: '',
+                            
+                            uploadFile(event) {
+                                let file = event.target.files[0];
+                                if (!file) return;
+                                
+                                this.fileStatus = 'uploading';
+                                this.errorMessage = '';
+                                this.fileName = file.name;
+                                
+                                let formData = new FormData();
+                                formData.append('file', file);
+                                
+                                fetch('{{ route('pendaftaran.uploadTemp') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name=&quot;csrf-token&quot;]').getAttribute('content')
+                                    },
+                                    body: formData
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if(data.status === 'success') {
+                                        this.fileStatus = 'uploaded';
+                                        document.getElementById('temp_foto_kk').value = data.temp_path;
+                                        document.getElementById('temp_foto_kk_name').value = data.temp_name;
+                                        document.getElementById('foto_kk').removeAttribute('required');
+                                    } else {
+                                        this.fileStatus = 'error';
+                                        this.errorMessage = data.message || 'Gagal mengupload file.';
+                                    }
+                                })
+                                .catch(error => {
+                                    this.fileStatus = 'error';
+                                    this.errorMessage = 'Terjadi kesalahan jaringan.';
+                                    console.error('Upload Error:', error);
+                                });
+                            }
+                        }"
+                        class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors relative">
+                        <!-- Hidden inputs for form submission -->
+                        <input type="hidden" name="temp_foto_kk" id="temp_foto_kk" value="{{ old('temp_foto_kk') }}">
+                        <input type="hidden" name="temp_foto_kk_name" id="temp_foto_kk_name" value="{{ old('temp_foto_kk_name') }}">
+                        
                         <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-gray-400 mb-3" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                         </svg>
                         <x-input-label for="foto_kk" value="Kartu Keluarga (Wajib)" class="font-bold text-gray-700" />
-                        @if(old('temp_foto_kk'))
-                            <input type="hidden" name="temp_foto_kk" value="{{ old('temp_foto_kk') }}">
-                            <input type="hidden" name="temp_foto_kk_name" value="{{ old('temp_foto_kk_name') }}">
-                            <span class="text-green-600 text-xs mt-2 block font-semibold">✔
-                                {{ old('temp_foto_kk_name', 'File') }} sudah diunggah.</span>
-                            <div class="relative mt-2" x-data="{ fileName: 'Ganti file (opsional)' }">
-                                <input type="file" id="foto_kk" name="foto_kk"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*"
-                                    @change="fileName = $event.target.files[0]?.name || 'Ganti file (opsional)'" />
-                                <div class="flex flex-col items-center justify-center relative z-0">
-                                    <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
-                                        x-text="fileName"></span>
-                                    <span
-                                        class="bg-gray-200 text-gray-700 text-xs font-semibold py-2 px-5 rounded-full inline-block hover:bg-gray-300 transition">Choose
-                                        File</span>
-                                </div>
+                        
+                        <!-- Status Messages -->
+                        <div x-show="fileStatus === 'uploading'" class="text-blue-500 font-semibold text-xs mt-2 animate-pulse">Mengupload...</div>
+                        <div x-show="fileStatus === 'uploaded'" class="text-green-600 font-semibold text-xs mt-2">✔ <span x-text="fileName"></span> berhasil diupload.</div>
+                        <div x-show="fileStatus === 'error'" class="text-red-500 font-semibold text-xs mt-2"><span x-text="errorMessage"></span></div>
+
+                        <div class="relative mt-3">
+                            <input type="file" id="foto_kk" name="foto_kk"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" :required="fileStatus !== 'uploaded'"
+                                accept="image/*"
+                                @change="uploadFile" />
+                            <div class="flex flex-col items-center justify-center relative z-0 mt-2">
+                                <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
+                                    x-text="fileStatus !== 'idle' ? fileName : 'No file chosen'"></span>
+                                <span
+                                    :class="fileStatus === 'uploaded' ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm'"
+                                    class="text-xs font-semibold py-2 px-5 rounded-full inline-block transition"
+                                    x-text="fileStatus === 'uploaded' ? 'Ganti File' : 'Pilih File'"></span>
                             </div>
-                        @else
-                            <div class="relative mt-3" x-data="{ fileName: 'No file chosen' }">
-                                <input type="file" id="foto_kk" name="foto_kk"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required
-                                    accept="image/*"
-                                    @change="fileName = $event.target.files[0]?.name || 'No file chosen'" />
-                                <div class="flex flex-col items-center justify-center relative z-0">
-                                    <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
-                                        x-text="fileName"></span>
-                                    <span
-                                        class="bg-blue-600 text-white text-xs font-semibold py-2 px-5 rounded-full inline-block hover:bg-blue-700 transition shadow-sm">Choose
-                                        File</span>
-                                </div>
-                            </div>
-                        @endif
+                        </div>
                     </div>
 
                     <!-- KTP Ortu -->
-                    <div id="ktp_ortu_container"
-                        class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors">
+                    <div id="ktp_ortu_container" x-data="{
+                            fileStatus: '{{ old('temp_foto_ktp_ortu') ? 'uploaded' : 'idle' }}',
+                            fileName: '{{ old('temp_foto_ktp_ortu_name', '') }}',
+                            errorMessage: '',
+                            
+                            uploadFile(event) {
+                                let file = event.target.files[0];
+                                if (!file) return;
+                                
+                                this.fileStatus = 'uploading';
+                                this.errorMessage = '';
+                                this.fileName = file.name;
+                                
+                                let formData = new FormData();
+                                formData.append('file', file);
+                                
+                                fetch('{{ route('pendaftaran.uploadTemp') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name=&quot;csrf-token&quot;]').getAttribute('content')
+                                    },
+                                    body: formData
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if(data.status === 'success') {
+                                        this.fileStatus = 'uploaded';
+                                        document.getElementById('temp_foto_ktp_ortu').value = data.temp_path;
+                                        document.getElementById('temp_foto_ktp_ortu_name').value = data.temp_name;
+                                    } else {
+                                        this.fileStatus = 'error';
+                                        this.errorMessage = data.message || 'Gagal mengupload file.';
+                                    }
+                                })
+                                .catch(error => {
+                                    this.fileStatus = 'error';
+                                    this.errorMessage = 'Terjadi kesalahan jaringan.';
+                                });
+                            }
+                        }"
+                        class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors relative">
+                        <input type="hidden" name="temp_foto_ktp_ortu" id="temp_foto_ktp_ortu" value="{{ old('temp_foto_ktp_ortu') }}">
+                        <input type="hidden" name="temp_foto_ktp_ortu_name" id="temp_foto_ktp_ortu_name" value="{{ old('temp_foto_ktp_ortu_name') }}">
+                        
                         <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-gray-400 mb-3" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -819,43 +927,72 @@
                         </svg>
                         <x-input-label for="foto_ktp_ortu" value="KTP Orang Tua/Wali(Wajib)"
                             class="font-bold text-gray-700" />
-                        @if(old('temp_foto_ktp_ortu'))
-                            <input type="hidden" name="temp_foto_ktp_ortu" value="{{ old('temp_foto_ktp_ortu') }}">
-                            <input type="hidden" name="temp_foto_ktp_ortu_name"
-                                value="{{ old('temp_foto_ktp_ortu_name') }}">
-                            <span class="text-green-600 text-xs mt-2 block font-semibold">✔
-                                {{ old('temp_foto_ktp_ortu_name', 'File') }} sudah diunggah. </span>
-                            <div class="relative mt-2" x-data="{ fileName: 'Ganti file (opsional)' }">
-                                <input type="file" id="foto_ktp_ortu" name="foto_ktp_ortu"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*"
-                                    @change="fileName = $event.target.files[0]?.name || 'Ganti file (opsional)'" />
-                                <div class="flex flex-col items-center justify-center relative z-0">
-                                    <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
-                                        x-text="fileName"></span>
-                                    <span
-                                        class="bg-gray-200 text-gray-700 text-xs font-semibold py-2 px-5 rounded-full inline-block hover:bg-gray-300 transition">Choose
-                                        File</span>
-                                </div>
+                        
+                        <div x-show="fileStatus === 'uploading'" class="text-blue-500 font-semibold text-xs mt-2 animate-pulse">Mengupload...</div>
+                        <div x-show="fileStatus === 'uploaded'" class="text-green-600 font-semibold text-xs mt-2">✔ <span x-text="fileName"></span> berhasil diupload.</div>
+                        <div x-show="fileStatus === 'error'" class="text-red-500 font-semibold text-xs mt-2"><span x-text="errorMessage"></span></div>
+
+                        <div class="relative mt-3">
+                            <input type="file" id="foto_ktp_ortu" name="foto_ktp_ortu"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*"
+                                @change="uploadFile" />
+                            <div class="flex flex-col items-center justify-center relative z-0 mt-2">
+                                <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
+                                    x-text="fileStatus !== 'idle' ? fileName : 'No file chosen'"></span>
+                                <span
+                                    :class="fileStatus === 'uploaded' ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm'"
+                                    class="text-xs font-semibold py-2 px-5 rounded-full inline-block transition"
+                                    x-text="fileStatus === 'uploaded' ? 'Ganti File' : 'Pilih File'"></span>
                             </div>
-                        @else
-                            <div class="relative mt-3" x-data="{ fileName: 'No file chosen' }">
-                                <input type="file" id="foto_ktp_ortu" name="foto_ktp_ortu"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*"
-                                    @change="fileName = $event.target.files[0]?.name || 'No file chosen'" />
-                                <div class="flex flex-col items-center justify-center relative z-0">
-                                    <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
-                                        x-text="fileName"></span>
-                                    <span
-                                        class="bg-blue-600 text-white text-xs font-semibold py-2 px-5 rounded-full inline-block hover:bg-blue-700 transition shadow-sm">Choose
-                                        File</span>
-                                </div>
-                            </div>
-                        @endif
+                        </div>
                     </div>
 
                     <!-- Akte Kelahiran -->
-                    <div
-                        class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors">
+                    <div x-data="{
+                            fileStatus: '{{ old('temp_foto_akte_kelahiran') ? 'uploaded' : 'idle' }}',
+                            fileName: '{{ old('temp_foto_akte_kelahiran_name', '') }}',
+                            errorMessage: '',
+                            
+                            uploadFile(event) {
+                                let file = event.target.files[0];
+                                if (!file) return;
+                                
+                                this.fileStatus = 'uploading';
+                                this.errorMessage = '';
+                                this.fileName = file.name;
+                                
+                                let formData = new FormData();
+                                formData.append('file', file);
+                                
+                                fetch('{{ route('pendaftaran.uploadTemp') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name=&quot;csrf-token&quot;]').getAttribute('content')
+                                    },
+                                    body: formData
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if(data.status === 'success') {
+                                        this.fileStatus = 'uploaded';
+                                        document.getElementById('temp_foto_akte_kelahiran').value = data.temp_path;
+                                        document.getElementById('temp_foto_akte_kelahiran_name').value = data.temp_name;
+                                        document.getElementById('foto_akte_kelahiran').removeAttribute('required');
+                                    } else {
+                                        this.fileStatus = 'error';
+                                        this.errorMessage = data.message || 'Gagal mengupload file.';
+                                    }
+                                })
+                                .catch(error => {
+                                    this.fileStatus = 'error';
+                                    this.errorMessage = 'Terjadi kesalahan jaringan.';
+                                });
+                            }
+                        }"
+                        class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors relative">
+                        <input type="hidden" name="temp_foto_akte_kelahiran" id="temp_foto_akte_kelahiran" value="{{ old('temp_foto_akte_kelahiran') }}">
+                        <input type="hidden" name="temp_foto_akte_kelahiran_name" id="temp_foto_akte_kelahiran_name" value="{{ old('temp_foto_akte_kelahiran_name') }}">
+                        
                         <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-gray-400 mb-3" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -863,45 +1000,73 @@
                         </svg>
                         <x-input-label for="foto_akte_kelahiran" value="Akte Kelahiran (Wajib)"
                             class="font-bold text-gray-700" />
-                        @if(old('temp_foto_akte_kelahiran'))
-                            <input type="hidden" name="temp_foto_akte_kelahiran"
-                                value="{{ old('temp_foto_akte_kelahiran') }}">
-                            <input type="hidden" name="temp_foto_akte_kelahiran_name"
-                                value="{{ old('temp_foto_akte_kelahiran_name') }}">
-                            <span class="text-green-600 text-xs mt-2 block font-semibold">✔
-                                {{ old('temp_foto_akte_kelahiran_name', 'File') }} sudah diunggah. </span>
-                            <div class="relative mt-2" x-data="{ fileName: 'Ganti file (opsional)' }">
-                                <input type="file" id="foto_akte_kelahiran" name="foto_akte_kelahiran"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*"
-                                    @change="fileName = $event.target.files[0]?.name || 'Ganti file (opsional)'" />
-                                <div class="flex flex-col items-center justify-center relative z-0">
-                                    <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
-                                        x-text="fileName"></span>
-                                    <span
-                                        class="bg-gray-200 text-gray-700 text-xs font-semibold py-2 px-5 rounded-full inline-block hover:bg-gray-300 transition">Choose
-                                        File</span>
-                                </div>
+                        
+                        <div x-show="fileStatus === 'uploading'" class="text-blue-500 font-semibold text-xs mt-2 animate-pulse">Mengupload...</div>
+                        <div x-show="fileStatus === 'uploaded'" class="text-green-600 font-semibold text-xs mt-2">✔ <span x-text="fileName"></span> berhasil diupload.</div>
+                        <div x-show="fileStatus === 'error'" class="text-red-500 font-semibold text-xs mt-2"><span x-text="errorMessage"></span></div>
+
+                        <div class="relative mt-3">
+                            <input type="file" id="foto_akte_kelahiran" name="foto_akte_kelahiran"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" :required="fileStatus !== 'uploaded'"
+                                accept="image/*"
+                                @change="uploadFile" />
+                            <div class="flex flex-col items-center justify-center relative z-0 mt-2">
+                                <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
+                                    x-text="fileStatus !== 'idle' ? fileName : 'No file chosen'"></span>
+                                <span
+                                    :class="fileStatus === 'uploaded' ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm'"
+                                    class="text-xs font-semibold py-2 px-5 rounded-full inline-block transition"
+                                    x-text="fileStatus === 'uploaded' ? 'Ganti File' : 'Pilih File'"></span>
                             </div>
-                        @else
-                            <div class="relative mt-3" x-data="{ fileName: 'No file chosen' }">
-                                <input type="file" id="foto_akte_kelahiran" name="foto_akte_kelahiran"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required
-                                    accept="image/*"
-                                    @change="fileName = $event.target.files[0]?.name || 'No file chosen'" />
-                                <div class="flex flex-col items-center justify-center relative z-0">
-                                    <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
-                                        x-text="fileName"></span>
-                                    <span
-                                        class="bg-blue-600 text-white text-xs font-semibold py-2 px-5 rounded-full inline-block hover:bg-blue-700 transition shadow-sm">Choose
-                                        File</span>
-                                </div>
-                            </div>
-                        @endif
+                        </div>
                     </div>
 
                     <!-- Ijazah / SKL -->
-                    <div
-                        class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors">
+                    <div x-data="{
+                            fileStatus: '{{ old('temp_ijazah_terakhir') ? 'uploaded' : 'idle' }}',
+                            fileName: '{{ old('temp_ijazah_terakhir_name', '') }}',
+                            errorMessage: '',
+                            
+                            uploadFile(event) {
+                                let file = event.target.files[0];
+                                if (!file) return;
+                                
+                                this.fileStatus = 'uploading';
+                                this.errorMessage = '';
+                                this.fileName = file.name;
+                                
+                                let formData = new FormData();
+                                formData.append('file', file);
+                                
+                                fetch('{{ route('pendaftaran.uploadTemp') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name=&quot;csrf-token&quot;]').getAttribute('content')
+                                    },
+                                    body: formData
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if(data.status === 'success') {
+                                        this.fileStatus = 'uploaded';
+                                        document.getElementById('temp_ijazah_terakhir').value = data.temp_path;
+                                        document.getElementById('temp_ijazah_terakhir_name').value = data.temp_name;
+                                        document.getElementById('ijazah_terakhir').removeAttribute('required');
+                                    } else {
+                                        this.fileStatus = 'error';
+                                        this.errorMessage = data.message || 'Gagal mengupload file.';
+                                    }
+                                })
+                                .catch(error => {
+                                    this.fileStatus = 'error';
+                                    this.errorMessage = 'Terjadi kesalahan jaringan.';
+                                });
+                            }
+                        }"
+                        class="bg-gray-50 border border-gray-200 border-dashed rounded-xl p-6 text-center hover:bg-blue-50 hover:border-blue-300 transition-colors relative">
+                        <input type="hidden" name="temp_ijazah_terakhir" id="temp_ijazah_terakhir" value="{{ old('temp_ijazah_terakhir') }}">
+                        <input type="hidden" name="temp_ijazah_terakhir_name" id="temp_ijazah_terakhir_name" value="{{ old('temp_ijazah_terakhir_name') }}">
+                        
                         <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-gray-400 mb-3" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -909,39 +1074,25 @@
                         </svg>
                         <x-input-label for="ijazah_terakhir" value="Ijazah Terakhir / SKL (Wajib)"
                             class="font-bold text-gray-700" />
-                        @if(old('temp_ijazah_terakhir'))
-                            <input type="hidden" name="temp_ijazah_terakhir" value="{{ old('temp_ijazah_terakhir') }}">
-                            <input type="hidden" name="temp_ijazah_terakhir_name"
-                                value="{{ old('temp_ijazah_terakhir_name') }}">
-                            <span class="text-green-600 text-xs mt-2 block font-semibold">✔
-                                {{ old('temp_ijazah_terakhir_name', 'File') }} sudah diunggah. </span>
-                            <div class="relative mt-2" x-data="{ fileName: 'Ganti file (opsional)' }">
-                                <input type="file" id="ijazah_terakhir" name="ijazah_terakhir"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*"
-                                    @change="fileName = $event.target.files[0]?.name || 'Ganti file (opsional)'" />
-                                <div class="flex flex-col items-center justify-center relative z-0">
-                                    <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
-                                        x-text="fileName"></span>
-                                    <span
-                                        class="bg-gray-200 text-gray-700 text-xs font-semibold py-2 px-5 rounded-full inline-block hover:bg-gray-300 transition">Choose
-                                        File</span>
-                                </div>
+                        
+                        <div x-show="fileStatus === 'uploading'" class="text-blue-500 font-semibold text-xs mt-2 animate-pulse">Mengupload...</div>
+                        <div x-show="fileStatus === 'uploaded'" class="text-green-600 font-semibold text-xs mt-2">✔ <span x-text="fileName"></span> berhasil diupload.</div>
+                        <div x-show="fileStatus === 'error'" class="text-red-500 font-semibold text-xs mt-2"><span x-text="errorMessage"></span></div>
+
+                        <div class="relative mt-3">
+                            <input type="file" id="ijazah_terakhir" name="ijazah_terakhir"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" :required="fileStatus !== 'uploaded'"
+                                accept="image/*"
+                                @change="uploadFile" />
+                            <div class="flex flex-col items-center justify-center relative z-0 mt-2">
+                                <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
+                                    x-text="fileStatus !== 'idle' ? fileName : 'No file chosen'"></span>
+                                <span
+                                    :class="fileStatus === 'uploaded' ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm'"
+                                    class="text-xs font-semibold py-2 px-5 rounded-full inline-block transition"
+                                    x-text="fileStatus === 'uploaded' ? 'Ganti File' : 'Pilih File'"></span>
                             </div>
-                        @else
-                            <div class="relative mt-3" x-data="{ fileName: 'No file chosen' }">
-                                <input type="file" id="ijazah_terakhir" name="ijazah_terakhir"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required
-                                    accept="image/*"
-                                    @change="fileName = $event.target.files[0]?.name || 'No file chosen'" />
-                                <div class="flex flex-col items-center justify-center relative z-0">
-                                    <span class="text-xs text-gray-500 mb-2 font-medium truncate w-full px-2"
-                                        x-text="fileName"></span>
-                                    <span
-                                        class="bg-blue-600 text-white text-xs font-semibold py-2 px-5 rounded-full inline-block hover:bg-blue-700 transition shadow-sm">Choose
-                                        File</span>
-                                </div>
-                            </div>
-                        @endif
+                        </div>
                     </div>
                 </div>
 

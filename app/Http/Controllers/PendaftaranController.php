@@ -18,6 +18,56 @@ class PendaftaranController extends Controller
         return view('pendaftaran.create', compact('referralCode'));
     }
 
+    public function checkNikNisn(Request $request)
+    {
+        $request->validate([
+            'nik' => 'required|string|size:16',
+            'nisn' => 'nullable|string',
+        ]);
+
+        $errors = [];
+
+        if (\App\Models\Pendaftaran::where('nik', $request->nik)->exists()) {
+            $errors['nik'] = 'NIK sudah terdaftar sebelumnya.';
+        }
+
+        if ($request->filled('nisn') && \App\Models\Pendaftaran::where('nisn', $request->nisn)->exists()) {
+            $errors['nisn'] = 'NISN sudah terdaftar sebelumnya.';
+        }
+
+        if (count($errors) > 0) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $errors
+            ], 422);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'NIK dan NISN tersedia.'
+        ]);
+    }
+
+    public function uploadTemp(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('temp_pendaftaran', 'public');
+            $name = $request->file('file')->getClientOriginalName();
+
+            return response()->json([
+                'status' => 'success',
+                'temp_path' => $path,
+                'temp_name' => $name
+            ]);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'File tidak ditemukan.'], 400);
+    }
+
     public function store(Request $request)
     {
         $rules = [
@@ -70,10 +120,10 @@ class PendaftaranController extends Controller
                 'string',
                 'max:255',
                 function ($attribute, $value, $fail) use ($request) {
-                    if ($request->status_ayah == 'sudah_meninggal' && $request->status_ibu == 'sudah_meninggal' && empty($value)) {
-                        $fail('Nama wali wajib diisi jika kedua orang tua sudah meninggal.');
-                    }
-                },
+            if ($request->status_ayah == 'sudah_meninggal' && $request->status_ibu == 'sudah_meninggal' && empty($value)) {
+                $fail('Nama wali wajib diisi jika kedua orang tua sudah meninggal.');
+            }
+        },
             ],
             'pendidikan_wali' => 'nullable|string|max:255',
             'pekerjaan_wali' => 'nullable|string|max:255',
@@ -85,7 +135,7 @@ class PendaftaranController extends Controller
         ];
 
         // Address sync logic
-        $alamatSama = (int) $request->input('alamat_ortu_sama', 0);
+        $alamatSama = (int)$request->input('alamat_ortu_sama', 0);
         if ($alamatSama == 0) {
             $rules['provinsi_ortu'] = 'required|string|max:255';
             $rules['kabupaten_ortu'] = 'required|string|max:255';
@@ -108,10 +158,10 @@ class PendaftaranController extends Controller
             'mimes:jpeg,png,jpg',
             'max:2048',
             function ($attribute, $value, $fail) use ($request) {
-                if (($request->status_ayah == 'masih_hidup' || $request->status_ibu == 'masih_hidup') && empty($value) && empty($request->input('temp_foto_ktp_ortu'))) {
-                    $fail('Foto KTP Ortu wajib diupload jika orang tua masih hidup.');
-                }
+            if (($request->status_ayah == 'masih_hidup' || $request->status_ibu == 'masih_hidup') && empty($value) && empty($request->input('temp_foto_ktp_ortu'))) {
+                $fail('Foto KTP Ortu wajib diupload jika orang tua masih hidup.');
             }
+        }
         ];
 
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
@@ -126,7 +176,8 @@ class PendaftaranController extends Controller
                     $path = $request->file($key)->store('temp_pendaftaran', 'public');
                     $tempFiles['temp_' . $key] = $path;
                     $tempFiles['temp_' . $key . '_name'] = $request->file($key)->getClientOriginalName();
-                } elseif ($request->input('temp_' . $key)) {
+                }
+                elseif ($request->input('temp_' . $key)) {
                     // Retain existing temp files if re-submitted without new upload
                     $tempFiles['temp_' . $key] = $request->input('temp_' . $key);
                     if ($request->input('temp_' . $key . '_name')) {
@@ -171,7 +222,8 @@ class PendaftaranController extends Controller
         foreach ($fileKeys as $key) {
             if ($request->hasFile($key)) {
                 $validated[$key] = $request->file($key)->store('pendaftaran', 'public');
-            } elseif ($request->input('temp_' . $key)) {
+            }
+            elseif ($request->input('temp_' . $key)) {
                 // Determine destination
                 $oldPath = $request->input('temp_' . $key);
                 $newPath = str_replace('temp_pendaftaran', 'pendaftaran', $oldPath);
