@@ -10,6 +10,11 @@ class Pendaftaran extends Model
 
     public function referralLink()
     {
-        return $this->belongsTo(ReferralLink::class, 'referral_code', 'code');
+        return $this->belongsTo(ReferralLink::class , 'referral_code', 'code');
+    }
+
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class);
     }
 }

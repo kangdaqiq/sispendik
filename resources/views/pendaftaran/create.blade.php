@@ -93,6 +93,21 @@
                 <h3 class="text-lg font-bold text-gray-800">Data Diri Pribadi Siswa</h3>
             </div>
             <div class="p-6">
+                <!-- Pilihan Jurusan -->
+                @if(isset($jurusans) && $jurusans->count() > 0)
+                <div class="mb-6">
+                    <x-input-label for="jurusan_id" value="Jurusan yang Dituju" />
+                    <select id="jurusan_id" name="jurusan_id" class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm" required>
+                        <option value="">-- Pilih Jurusan --</option>
+                        @foreach ($jurusans as $jurusan)
+                            <option value="{{ $jurusan->id }}" {{ old('jurusan_id') == $jurusan->id ? 'selected' : '' }}>
+                                {{ $jurusan->nama }} {{ $jurusan->kode ? '(' . $jurusan->kode . ')' : '' }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
+
                 <!-- NIK, NISN, KK -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>

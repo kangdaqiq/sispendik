@@ -9,13 +9,15 @@ class PendaftaranController extends Controller
     public function create(Request $request)
     {
         $referralCode = $request->query('ref', '');
-        return view('pendaftaran.create', compact('referralCode'));
+        $jurusans = \App\Models\Jurusan::all();
+        return view('pendaftaran.create', compact('referralCode', 'jurusans'));
     }
 
     public function createWithReferral(string $code)
     {
         $referralCode = $code;
-        return view('pendaftaran.create', compact('referralCode'));
+        $jurusans = \App\Models\Jurusan::all();
+        return view('pendaftaran.create', compact('referralCode', 'jurusans'));
     }
 
     public function checkNikNisn(Request $request)
@@ -71,6 +73,7 @@ class PendaftaranController extends Controller
     public function store(Request $request)
     {
         $rules = [
+            'jurusan_id' => 'required|exists:jurusan,id',
             'nik' => 'required|string|unique:pendaftarans,nik',
             'nisn' => 'nullable|string|unique:pendaftarans,nisn',
             'no_kk' => 'required|string',
