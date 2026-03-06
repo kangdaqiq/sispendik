@@ -23,9 +23,39 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('pendaftaran.store') }}" enctype="multipart/form-data" class="space-y-8"
-        x-data="{ step: 1 }">
+    <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data"
+        x-data="{ step: 1, isSubmitting: false, serverError: '' }"
+        @submit="isSubmitting = true">
         @csrf
+
+        <!-- Error Alert -->
+        @if ($errors->any())
+            <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm" x-show="step === 1">
+                <div class="flex items-center mb-2">
+                    <svg class="h-5 w-5 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <h3 class="text-sm font-bold text-red-800">Terdapat kesalahan pada input Anda:</h3>
+                </div>
+                <ul class="list-disc list-inside text-sm text-red-700 ml-7 space-y-1">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <!-- Custom JS Error Alert -->
+        <div x-show="serverError" x-cloak class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm" x-transition>
+            <div class="flex items-center mb-1">
+                <svg class="h-5 w-5 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <h3 class="text-sm font-bold text-red-800">Peringatan!</h3>
+            </div>
+            <div class="text-sm text-red-700 ml-7 whitespace-pre-line" x-text="serverError"></div>
+        </div>
+
         <input type="hidden" name="referral_code" value="{{ old('referral_code', $referralCode ?? '') }}">
 
         <!-- Progress Bar Indicator -->
@@ -214,8 +244,10 @@
                                 
                                 if (data.status === 'error') {
                                     let errorMsg = Object.values(data.errors).join('\n');
-                                    alert('Peringatan!\n\n' + errorMsg);
+                                    serverError = errorMsg;
+                                    window.scrollTo({top: 0, behavior: 'smooth'});
                                 } else {
+                                    serverError = '';
                                     step = 2; 
                                     window.scrollTo({top: 0, behavior: 'smooth'});
                                 }
@@ -223,7 +255,8 @@
                             .catch(error => {
                                 btn.disabled = false;
                                 btn.innerHTML = originalText;
-                                alert('Terjadi kesalahan saat memeriksa NIK/NISN. Silakan coba lagi.');
+                                serverError = 'Terjadi kesalahan saat memeriksa NIK/NISN. Silakan coba lagi.';
+                                window.scrollTo({top: 0, behavior: 'smooth'});
                                 console.error('Error:', error);
                             });
                         } else {
