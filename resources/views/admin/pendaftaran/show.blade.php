@@ -87,6 +87,10 @@
                             <td>{{ $pendaftaran->nama }}</td>
                         </tr>
                         <tr>
+                            <th>Jurusan yang Dituju</th>
+                            <td>{{ $pendaftaran->jurusan ? $pendaftaran->jurusan->nama : '-' }}</td>
+                        </tr>
+                        <tr>
                             <th>Nama Panggilan</th>
                             <td>{{ $pendaftaran->nama_panggilan ?? '-' }}</td>
                         </tr>

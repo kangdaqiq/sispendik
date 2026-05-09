@@ -333,6 +333,11 @@
                 <td>{{ $pendaftaran->nama }}</td>
             </tr>
             <tr>
+                <td>Jurusan yang Dituju</td>
+                <td>:</td>
+                <td>{{ $pendaftaran->jurusan ? $pendaftaran->jurusan->nama : '-' }}</td>
+            </tr>
+            <tr>
                 <td>Nama Panggilan</td>
                 <td>:</td>
                 <td>{{ $pendaftaran->nama_panggilan ?? '-' }}</td>
