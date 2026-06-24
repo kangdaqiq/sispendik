@@ -10,12 +10,14 @@ class WhatsAppService
     protected $baseUrl;
     protected $username;
     protected $password;
+    protected $deviceId;
 
     public function __construct()
     {
         $this->baseUrl = config('services.whatsapp.url');
         $this->username = config('services.whatsapp.username');
         $this->password = config('services.whatsapp.password');
+        $this->deviceId = config('services.whatsapp.device_id');
     }
 
     /**
@@ -27,6 +29,7 @@ class WhatsAppService
 
         try {
             $response = Http::withBasicAuth($this->username, $this->password)
+                ->withHeaders(['X-Device-Id' => $this->deviceId])
                 ->post($this->baseUrl . '/send/message', [
                     'phone' => $phone,
                     'message' => $message,
@@ -60,6 +63,7 @@ class WhatsAppService
             $fileName = basename($filePath);
 
             $response = Http::withBasicAuth($this->username, $this->password)
+                ->withHeaders(['X-Device-Id' => $this->deviceId])
                 ->timeout(60)
                 ->attach('file', $fileContent, $fileName)
                 ->post($this->baseUrl . '/send/file', [

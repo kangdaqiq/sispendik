@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Pendaftaran;
+use App\Models\Jurusan;
 use App\Jobs\SendWhatsAppPendaftaranNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -13,6 +14,15 @@ use Tests\TestCase;
 class PendaftaranTest extends TestCase
 {
     use RefreshDatabase;
+
+    private function createTestJurusan()
+    {
+        return Jurusan::create([
+            'kode' => 'TKJ',
+            'nama' => 'Teknik Komputer & Jaringan',
+            'deskripsi' => 'Testing'
+        ]);
+    }
 
     public function test_pendaftaran_page_is_accessible(): void
     {
@@ -28,7 +38,7 @@ class PendaftaranTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertSessionHasErrors([
-            'nik', 'no_kk', 'nama', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama',
+            'jurusan_id', 'nik', 'no_kk', 'nama', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama',
             'no_telp', 'sekolah_asal', 'anak_ke', 'dari_bersaudara', 'status_anak', 'berat_badan',
             'tinggi_badan', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'alamat_detail',
             'status_ayah', 'nama_ayah', 'status_ibu', 'nama_ibu'
@@ -40,7 +50,10 @@ class PendaftaranTest extends TestCase
         Queue::fake();
         Storage::fake('public');
 
+        $jurusan = $this->createTestJurusan();
+
         $payload = [
+            'jurusan_id' => $jurusan->id,
             'nik' => '1234567890123456',
             'nisn' => '00987654321',
             'no_kk' => '6543210987654321',
@@ -118,6 +131,8 @@ class PendaftaranTest extends TestCase
         Queue::fake();
         Storage::fake('public');
 
+        $jurusan = $this->createTestJurusan();
+
         $referral = \App\Models\ReferralLink::create([
             'code' => 'KANGDAQIQ',
             'nama' => 'Test Referral',
@@ -125,6 +140,7 @@ class PendaftaranTest extends TestCase
         ]);
 
         $payload = [
+            'jurusan_id' => $jurusan->id,
             'nik' => '1234567890123457',
             'no_kk' => '6543210987654321',
             'nama' => 'Ahmad Dani 2',
@@ -178,7 +194,10 @@ class PendaftaranTest extends TestCase
         Queue::fake();
         Storage::fake('public');
 
+        $jurusan = $this->createTestJurusan();
+
         $payload = [
+            'jurusan_id' => $jurusan->id,
             'nik' => '1234567890123458',
             'no_kk' => '6543210987654321',
             'nama' => 'Ahmad Dani 3',

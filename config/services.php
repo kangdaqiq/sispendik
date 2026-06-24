@@ -39,6 +39,7 @@ return [
         'url' => env('WA_API_URL', 'https://wa-api.smkassuniyah.sch.id'),
         'username' => env('WA_API_USERNAME'),
         'password' => env('WA_API_PASSWORD'),
+        'device_id' => env('WA_API_DEVICE_ID'),
     ],
 
 ];
