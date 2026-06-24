@@ -85,9 +85,11 @@ class SendWhatsAppPendaftaranNotification implements ShouldQueue
 
         // 2. Kirim pesan teks
         Log::info("WA Job [1/2]: Kirim teks ke {$phone}");
+        $jurusan = $this->pendaftaran->jurusan ? $this->pendaftaran->jurusan->nama : '-';
         $message = "*PENDAFTARAN BERHASIL*\n\n"
             . "Halo {$nama},\n\n"
             . "Terima kasih telah mendaftar di SMK Assuniyah Tumijajar pada tanggal {$tgl}.\n"
+            . "Jurusan yang dipilih: {$jurusan}\n"
             . "Pendaftaran Anda telah kami terima dan sedang diproses. Berikut adalah lampiran *Formulir Pendaftaran* Anda (PDF).\n\n"
             . "Mohon simpan formulir ini dengan baik.\n\n"
             . "_Panitia PPDB SMK Assuniyah Tumijajar_";
