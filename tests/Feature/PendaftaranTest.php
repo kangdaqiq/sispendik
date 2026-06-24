@@ -244,4 +244,69 @@ class PendaftaranTest extends TestCase
             'ijazah_terakhir' => null,
         ]);
     }
+
+    public function test_send_whatsapp_pendaftaran_notification_job(): void
+    {
+        Storage::fake('public');
+
+        $jurusan = $this->createTestJurusan();
+        $pendaftaran = Pendaftaran::create([
+            'jurusan_id' => $jurusan->id,
+            'nik' => '1234567890123456',
+            'nisn' => '00987654321',
+            'no_kk' => '6543210987654321',
+            'nama' => 'Ahmad Dani',
+            'jenis_kelamin' => 'L',
+            'tempat_lahir' => 'Sidoarjo',
+            'tanggal_lahir' => '2010-05-15',
+            'agama' => 'Islam',
+            'no_telp' => '081234567890',
+            'sekolah_asal' => 'SMPN 1 Sidoarjo',
+            'anak_ke' => 1,
+            'dari_bersaudara' => 2,
+            'status_anak' => 'kandung',
+            'berat_badan' => 45,
+            'tinggi_badan' => 155,
+            'provinsi' => 'Jawa Timur',
+            'kabupaten' => 'Sidoarjo',
+            'kecamatan' => 'Candi',
+            'desa' => 'Gelam',
+            'alamat_detail' => 'Perumahan Gelam Jaya Indah',
+            'status_ayah' => 'masih_hidup',
+            'nama_ayah' => 'Budi Santoso',
+            'status_ibu' => 'masih_hidup',
+            'nama_ibu' => 'Siti Aminah',
+            'foto_kk' => 'temp/kk.jpg',
+            'foto_ktp_ortu' => 'temp/ktp.jpg',
+            'foto_akte_kelahiran' => 'temp/akte.jpg',
+        ]);
+
+        $groupGuru = '6281369368296-1504440561@g.us';
+        config(['services.whatsapp.group_guru' => $groupGuru]);
+
+        $sentMessages = [];
+        $mockWa = $this->createMock(\App\Services\WhatsAppService::class);
+        $mockWa->method('sendMessage')
+            ->willReturnCallback(function ($phone, $message) use (&$sentMessages) {
+                $sentMessages[] = [
+                    'phone' => $phone,
+                    'message' => $message
+                ];
+                return true;
+            });
+
+        $mockWa->method('sendFile')
+            ->willReturn(true);
+
+        $job = new SendWhatsAppPendaftaranNotification($pendaftaran);
+        $job->handle($mockWa);
+
+        $this->assertCount(2, $sentMessages);
+        $this->assertEquals('081234567890', $sentMessages[0]['phone']);
+        $this->assertStringContainsString('Ahmad Dani', $sentMessages[0]['message']);
+        $this->assertEquals($groupGuru, $sentMessages[1]['phone']);
+        $this->assertStringContainsString('PENDAFTARAN SISWA BARU', $sentMessages[1]['message']);
+        $this->assertStringContainsString('Ahmad Dani', $sentMessages[1]['message']);
+        $this->assertStringContainsString('Teknik Komputer & Jaringan', $sentMessages[1]['message']);
+    }
 }

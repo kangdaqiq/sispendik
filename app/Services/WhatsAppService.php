@@ -90,6 +90,10 @@ class WhatsAppService
      */
     protected function formatPhone($phone)
     {
+        if (str_contains($phone, '@')) {
+            return $phone;
+        }
+
         // Remove non-numeric characters
         $phone = preg_replace('/[^0-9]/', '', $phone);
 

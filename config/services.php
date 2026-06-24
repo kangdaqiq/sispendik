@@ -40,6 +40,7 @@ return [
         'username' => env('WA_API_USERNAME'),
         'password' => env('WA_API_PASSWORD'),
         'device_id' => env('WA_API_DEVICE_ID'),
+        'group_guru' => env('WA_GROUP_GURU'),
     ],
 
 ];

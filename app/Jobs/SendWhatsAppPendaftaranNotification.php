@@ -80,7 +80,7 @@ class SendWhatsAppPendaftaranNotification implements ShouldQueue
 
         $pdfFilename = 'pdf_pendaftaran/Formulir_Pendaftaran_' . ($pendaftaran->nisn ?: $pendaftaran->id) . '_' . time() . '.pdf';
         Storage::disk('public')->put($pdfFilename, $pdfContent);
-        $fullPdfPath = storage_path('app/public/' . $pdfFilename);
+        $fullPdfPath = Storage::disk('public')->path($pdfFilename);
         Log::info("WA Job [0/2 OK]: PDF berhasil digenerate di {$fullPdfPath}");
 
         // 2. Kirim pesan teks
@@ -111,6 +111,26 @@ class SendWhatsAppPendaftaranNotification implements ShouldQueue
         } else {
             Log::error("WA Job [2/2 FAIL]: File PDF tidak ditemukan di {$fullPdfPath}");
             throw new \Exception("File PDF tidak ditemukan: {$fullPdfPath}");
+        }
+
+        // 4. Kirim notifikasi ke grup guru jika dikonfigurasi
+        $groupGuru = config('services.whatsapp.group_guru');
+        if (!empty($groupGuru)) {
+            Log::info("WA Job: Kirim notifikasi pendaftaran baru ke grup guru: {$groupGuru}");
+            try {
+                $nisn = $this->pendaftaran->nisn ?: '-';
+                $groupMessage = "📢 *PENDAFTARAN SISWA BARU* 📢\n"
+                    . "• Nama: {$nama}\n"
+                    . "• NISN: {$nisn}\n"
+                    . "• Sekolah Asal: {$this->pendaftaran->sekolah_asal}\n"
+                    . "• Pilihan Jurusan: {$jurusan}\n"
+                    . "• Tanggal Daftar: {$tgl}";
+
+                $waService->sendMessage($groupGuru, $groupMessage);
+                Log::info("WA Job: Notifikasi ke grup guru berhasil dikirim.");
+            } catch (\Exception $e) {
+                Log::error("WA Job [Group Notification FAIL]: " . $e->getMessage());
+            }
         }
     }
 }
