@@ -99,7 +99,7 @@ class PendaftaranController extends Controller
 
         // File Validation Logic with Temporary Support
         $rules['foto_kk'] = $request->input('temp_foto_kk') ? 'nullable|image|mimes:jpeg,png,jpg|max:2048' : 'required|image|mimes:jpeg,png,jpg|max:2048';
-        $rules['ijazah_terakhir'] = $request->input('temp_ijazah_terakhir') ? 'nullable|image|mimes:jpeg,png,jpg|max:2048' : 'required|image|mimes:jpeg,png,jpg|max:2048';
+        $rules['ijazah_terakhir'] = 'nullable|image|mimes:jpeg,png,jpg|max:2048';
         $rules['foto_akte_kelahiran'] = $request->input('temp_foto_akte_kelahiran') ? 'nullable|image|mimes:jpeg,png,jpg|max:2048' : 'required|image|mimes:jpeg,png,jpg|max:2048';
 
         $rules['foto_ktp_ortu'] = [

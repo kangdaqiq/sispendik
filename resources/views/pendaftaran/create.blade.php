@@ -907,7 +907,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                         </svg>
-                        <x-input-label for="ijazah_terakhir" value="Ijazah Terakhir / SKL (Wajib)"
+                        <x-input-label for="ijazah_terakhir" value="Ijazah Terakhir / SKL (Opsional)"
                             class="font-bold text-gray-700" />
                         @if(old('temp_ijazah_terakhir'))
                             <input type="hidden" name="temp_ijazah_terakhir" value="{{ old('temp_ijazah_terakhir') }}">
@@ -930,7 +930,7 @@
                         @else
                             <div class="relative mt-3" x-data="{ fileName: 'No file chosen' }">
                                 <input type="file" id="ijazah_terakhir" name="ijazah_terakhir"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required
+                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                     accept="image/*"
                                     @change="fileName = $event.target.files[0]?.name || 'No file chosen'" />
                                 <div class="flex flex-col items-center justify-center relative z-0">
