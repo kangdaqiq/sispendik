@@ -18,4 +18,10 @@
             </a>
         </div>
     </div>
+
+    <script>
+        // Clear registration draft and step on successful submission
+        localStorage.removeItem('pendaftaran_draft');
+        localStorage.removeItem('pendaftaran_step');
+    </script>
 </x-guest-layout>

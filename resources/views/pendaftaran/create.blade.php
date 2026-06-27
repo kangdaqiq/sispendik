@@ -24,7 +24,8 @@
     @endif
 
     <form action="{{ route('pendaftaran.store') }}" method="POST" enctype="multipart/form-data"
-        x-data="{ step: 1, isSubmitting: false, serverError: '' }"
+        x-data="{ step: parseInt(localStorage.getItem('pendaftaran_step') || '1'), isSubmitting: false, serverError: '' }"
+        x-init="$watch('step', value => localStorage.setItem('pendaftaran_step', value))"
         @submit="isSubmitting = true">
         @csrf
 
@@ -850,8 +851,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                     <!-- Kartu Keluarga -->
                     <div x-data="{
-                            fileStatus: '{{ old('temp_foto_kk') ? 'uploaded' : 'idle' }}',
-                            fileName: '{{ old('temp_foto_kk_name', '') }}',
+                            fileStatus: (document.getElementById('temp_foto_kk')?.value) ? 'uploaded' : '{{ old('temp_foto_kk') ? 'uploaded' : 'idle' }}',
+                            fileName: (document.getElementById('temp_foto_kk_name')?.value) || '{{ old('temp_foto_kk_name', '') }}',
                             errorMessage: '',
                             
                             uploadFile(event) {
@@ -926,8 +927,8 @@
 
                     <!-- KTP Ortu -->
                     <div id="ktp_ortu_container" x-data="{
-                            fileStatus: '{{ old('temp_foto_ktp_ortu') ? 'uploaded' : 'idle' }}',
-                            fileName: '{{ old('temp_foto_ktp_ortu_name', '') }}',
+                            fileStatus: (document.getElementById('temp_foto_ktp_ortu')?.value) ? 'uploaded' : '{{ old('temp_foto_ktp_ortu') ? 'uploaded' : 'idle' }}',
+                            fileName: (document.getElementById('temp_foto_ktp_ortu_name')?.value) || '{{ old('temp_foto_ktp_ortu_name', '') }}',
                             errorMessage: '',
                             
                             uploadFile(event) {
@@ -998,8 +999,8 @@
 
                     <!-- Akte Kelahiran -->
                     <div x-data="{
-                            fileStatus: '{{ old('temp_foto_akte_kelahiran') ? 'uploaded' : 'idle' }}',
-                            fileName: '{{ old('temp_foto_akte_kelahiran_name', '') }}',
+                            fileStatus: (document.getElementById('temp_foto_akte_kelahiran')?.value) ? 'uploaded' : '{{ old('temp_foto_akte_kelahiran') ? 'uploaded' : 'idle' }}',
+                            fileName: (document.getElementById('temp_foto_akte_kelahiran_name')?.value) || '{{ old('temp_foto_akte_kelahiran_name', '') }}',
                             errorMessage: '',
                             
                             uploadFile(event) {
@@ -1072,8 +1073,8 @@
 
                     <!-- Ijazah / SKL -->
                     <div x-data="{
-                            fileStatus: '{{ old('temp_ijazah_terakhir') ? 'uploaded' : 'idle' }}',
-                            fileName: '{{ old('temp_ijazah_terakhir_name', '') }}',
+                            fileStatus: (document.getElementById('temp_ijazah_terakhir')?.value) ? 'uploaded' : '{{ old('temp_ijazah_terakhir') ? 'uploaded' : 'idle' }}',
+                            fileName: (document.getElementById('temp_ijazah_terakhir_name')?.value) || '{{ old('temp_ijazah_terakhir_name', '') }}',
                             errorMessage: '',
                             
                             uploadFile(event) {
@@ -1172,6 +1173,60 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // --- Form Draft Autosave & Restore Logic ---
+            const form = document.querySelector('form');
+            const draftKey = 'pendaftaran_draft';
+
+            function restoreDraft() {
+                const raw = localStorage.getItem(draftKey);
+                if (!raw) return;
+                try {
+                    const data = JSON.parse(raw);
+                    Object.keys(data).forEach(name => {
+                        const val = data[name];
+                        const inputs = form.querySelectorAll(`[name="${name}"]`);
+                        inputs.forEach(el => {
+                            if (el.type === 'checkbox') {
+                                el.checked = !!val;
+                            } else if (el.type === 'radio') {
+                                if (el.value === val) {
+                                    el.checked = true;
+                                }
+                            } else {
+                                el.value = val;
+                            }
+                        });
+                    });
+                } catch (e) {
+                    console.error('Failed to restore draft:', e);
+                }
+            }
+
+            function saveDraft() {
+                const data = {};
+                form.querySelectorAll('input:not([type="file"]):not([name="_token"]):not([name="referral_code"]), select, textarea').forEach(el => {
+                    if (el.name) {
+                        if (el.type === 'checkbox') {
+                            data[el.name] = el.checked;
+                        } else if (el.type === 'radio') {
+                            if (el.checked) {
+                                data[el.name] = el.value;
+                            }
+                        } else {
+                            data[el.name] = el.value;
+                        }
+                    }
+                });
+                localStorage.setItem(draftKey, JSON.stringify(data));
+            }
+
+            // Restore the draft right away before any other logic sets up
+            restoreDraft();
+
+            // Set up save listeners
+            form.addEventListener('input', saveDraft);
+            form.addEventListener('change', saveDraft);
+
             // --- 1. Parent Lifecycle & Guardian Logic ---
             const statusAyah = document.getElementById('status_ayah');
             const statusIbu = document.getElementById('status_ibu');
