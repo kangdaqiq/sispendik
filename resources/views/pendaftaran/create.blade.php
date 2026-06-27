@@ -411,11 +411,11 @@
                 <h3 class="text-lg font-bold text-gray-800">Data Orang Tua / Wali</h3>
             </div>
             <div class="p-6" x-data="{ 
-                statusAyah: '{{ old('status_ayah', 'masih_hidup') }}', 
-                statusIbu: '{{ old('status_ibu', 'masih_hidup') }}',
-                pekerjaanAyah: '{{ old('pekerjaan_ayah') }}',
-                pekerjaanIbu: '{{ old('pekerjaan_ibu') }}',
-                pekerjaanWali: '{{ old('pekerjaan_wali') }}'
+                statusAyah: document.getElementById('status_ayah')?.value || '{{ old('status_ayah', 'masih_hidup') }}', 
+                statusIbu: document.getElementById('status_ibu')?.value || '{{ old('status_ibu', 'masih_hidup') }}',
+                pekerjaanAyah: document.getElementById('pekerjaan_ayah')?.value || '{{ old('pekerjaan_ayah') }}',
+                pekerjaanIbu: document.getElementById('pekerjaan_ibu')?.value || '{{ old('pekerjaan_ibu') }}',
+                pekerjaanWali: document.getElementById('pekerjaan_wali')?.value || '{{ old('pekerjaan_wali') }}'
             }">
 
                 <div class="grid grid-cols-1 gap-8">
@@ -877,8 +877,12 @@
                                 .then(data => {
                                     if(data.status === 'success') {
                                         this.fileStatus = 'uploaded';
-                                        document.getElementById('temp_foto_kk').value = data.temp_path;
-                                        document.getElementById('temp_foto_kk_name').value = data.temp_name;
+                                        const tPath = document.getElementById('temp_foto_kk');
+                                        const tName = document.getElementById('temp_foto_kk_name');
+                                        tPath.value = data.temp_path;
+                                        tName.value = data.temp_name;
+                                        tPath.dispatchEvent(new Event('change', { bubbles: true }));
+                                        tName.dispatchEvent(new Event('change', { bubbles: true }));
                                         document.getElementById('foto_kk').removeAttribute('required');
                                     } else {
                                         this.fileStatus = 'error';
@@ -953,8 +957,12 @@
                                 .then(data => {
                                     if(data.status === 'success') {
                                         this.fileStatus = 'uploaded';
-                                        document.getElementById('temp_foto_ktp_ortu').value = data.temp_path;
-                                        document.getElementById('temp_foto_ktp_ortu_name').value = data.temp_name;
+                                        const tPath = document.getElementById('temp_foto_ktp_ortu');
+                                        const tName = document.getElementById('temp_foto_ktp_ortu_name');
+                                        tPath.value = data.temp_path;
+                                        tName.value = data.temp_name;
+                                        tPath.dispatchEvent(new Event('change', { bubbles: true }));
+                                        tName.dispatchEvent(new Event('change', { bubbles: true }));
                                     } else {
                                         this.fileStatus = 'error';
                                         this.errorMessage = data.message || 'Gagal mengupload file.';
@@ -1025,8 +1033,12 @@
                                 .then(data => {
                                     if(data.status === 'success') {
                                         this.fileStatus = 'uploaded';
-                                        document.getElementById('temp_foto_akte_kelahiran').value = data.temp_path;
-                                        document.getElementById('temp_foto_akte_kelahiran_name').value = data.temp_name;
+                                        const tPath = document.getElementById('temp_foto_akte_kelahiran');
+                                        const tName = document.getElementById('temp_foto_akte_kelahiran_name');
+                                        tPath.value = data.temp_path;
+                                        tName.value = data.temp_name;
+                                        tPath.dispatchEvent(new Event('change', { bubbles: true }));
+                                        tName.dispatchEvent(new Event('change', { bubbles: true }));
                                         document.getElementById('foto_akte_kelahiran').removeAttribute('required');
                                     } else {
                                         this.fileStatus = 'error';
@@ -1099,8 +1111,12 @@
                                 .then(data => {
                                     if(data.status === 'success') {
                                         this.fileStatus = 'uploaded';
-                                        document.getElementById('temp_ijazah_terakhir').value = data.temp_path;
-                                        document.getElementById('temp_ijazah_terakhir_name').value = data.temp_name;
+                                        const tPath = document.getElementById('temp_ijazah_terakhir');
+                                        const tName = document.getElementById('temp_ijazah_terakhir_name');
+                                        tPath.value = data.temp_path;
+                                        tName.value = data.temp_name;
+                                        tPath.dispatchEvent(new Event('change', { bubbles: true }));
+                                        tName.dispatchEvent(new Event('change', { bubbles: true }));
                                         document.getElementById('ijazah_terakhir').removeAttribute('required');
                                     } else {
                                         this.fileStatus = 'error';
@@ -1177,9 +1193,14 @@
             const form = document.querySelector('form');
             const draftKey = 'pendaftaran_draft';
 
+            let isRestoring = false;
             function restoreDraft() {
+                isRestoring = true;
                 const raw = localStorage.getItem(draftKey);
-                if (!raw) return;
+                if (!raw) {
+                    isRestoring = false;
+                    return;
+                }
                 try {
                     const data = JSON.parse(raw);
                     Object.keys(data).forEach(name => {
@@ -1188,21 +1209,27 @@
                         inputs.forEach(el => {
                             if (el.type === 'checkbox') {
                                 el.checked = !!val;
+                                el.dispatchEvent(new Event('change', { bubbles: true }));
                             } else if (el.type === 'radio') {
                                 if (el.value === val) {
                                     el.checked = true;
+                                    el.dispatchEvent(new Event('change', { bubbles: true }));
                                 }
                             } else {
                                 el.value = val;
+                                el.dispatchEvent(new Event('input', { bubbles: true }));
+                                el.dispatchEvent(new Event('change', { bubbles: true }));
                             }
                         });
                     });
                 } catch (e) {
                     console.error('Failed to restore draft:', e);
                 }
+                isRestoring = false;
             }
 
             function saveDraft() {
+                if (isRestoring) return;
                 const data = {};
                 form.querySelectorAll('input:not([type="file"]):not([name="_token"]):not([name="referral_code"]), select, textarea').forEach(el => {
                     if (el.name) {
